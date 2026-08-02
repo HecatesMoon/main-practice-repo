@@ -29,4 +29,33 @@ public class TextUtils {
         return true;
     }
 
+    public int countVocals(String word){
+
+        int counter = 0;
+        
+        for (int i = 0; i < word.length(); i++){
+            if (isVocal(word.charAt(i))) counter++;
+        }
+
+        return counter;
+    }
+
+    private boolean isVocal(char letter){
+        String stringLetter = String.valueOf(letter);
+        stringLetter = stringLetter.toLowerCase();
+        if(stringLetter.equals("a")) return true;
+        if(stringLetter.equals("e")) return true;
+        if(stringLetter.equals("i")) return true;
+        if(stringLetter.equals("o")) return true;
+        if(stringLetter.equals("u")) return true;
+
+        if(stringLetter.equals("á")) return true;
+        if(stringLetter.equals("é")) return true;
+        if(stringLetter.equals("í")) return true;
+        if(stringLetter.equals("ó")) return true;
+        if(stringLetter.equals("ú")) return true;
+
+        return false;
+    }
+
 }
