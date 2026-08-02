@@ -58,4 +58,15 @@ public class TextUtils {
         return false;
     }
 
+    public String reverseText(String text){
+        char[] charArray = text.toCharArray();
+        StringBuilder reversedText = new StringBuilder();
+
+        for (int i = charArray.length -1; i >= 0; i--) {
+            reversedText.append(charArray[i]);
+        }
+
+        return reversedText.toString();
+    }
+
 }
