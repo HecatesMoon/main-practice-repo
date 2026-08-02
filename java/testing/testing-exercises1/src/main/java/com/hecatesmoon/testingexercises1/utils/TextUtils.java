@@ -1,5 +1,10 @@
 package com.hecatesmoon.testingexercises1.utils;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Stream;
+
 public class TextUtils {
     
     public TextUtils (){}
@@ -68,5 +73,22 @@ public class TextUtils {
 
         return reversedText.toString();
     }
+
+    public Map<Character, Integer> frequencyCounter(String text){
+        Map<Character, Integer> result = new HashMap<>();
+
+        String[] textArray = text.split("");
+
+        Object[] textLetters = Arrays.stream(textArray).distinct().toArray();
+
+        Arrays.stream(textLetters).forEach(l -> {
+            Long counter = Arrays.stream(textArray).filter(t -> t.equals(l)).count();
+            Integer newCounter = counter.intValue();
+            Character letter = l.toString().charAt(0);
+            result.put(letter, newCounter);
+        });
+
+        return result;
+    } 
 
 }
