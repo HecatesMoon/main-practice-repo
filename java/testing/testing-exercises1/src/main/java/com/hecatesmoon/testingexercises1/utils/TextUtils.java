@@ -10,7 +10,7 @@ public class TextUtils {
             return false;
         }
 
-        word = cleanSpaces(word);
+        word = word.replaceAll(" ", "");
         word = word.toLowerCase();
 
         int start = 0;
@@ -27,19 +27,6 @@ public class TextUtils {
         }
 
         return true;
-    }
-
-    private String cleanSpaces(String word){
-        String[] stringArray = word.split(" ");
-        StringBuilder newString = new StringBuilder();
-
-        for (String string : stringArray) {
-            if (!string.isBlank()){
-                newString.append(string);
-            }
-        }
-
-        return newString.toString();
     }
 
 }
