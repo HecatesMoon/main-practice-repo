@@ -1,8 +1,11 @@
 package com.hecatesmoon.testingexercises1.utils;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class TextUtils {
@@ -74,19 +77,19 @@ public class TextUtils {
         return reversedText.toString();
     }
 
-    public Map<Character, Integer> frequencyCounter(String text){
-        Map<Character, Integer> result = new HashMap<>();
+    public Map<Character, Long> frequencyCounter(String text){
+        Map<Character, Long> result = new HashMap<>();
 
-        String[] textArray = text.split("");
+        char[] array = text.toCharArray();
+        Stream.Builder<Character> builder = Stream.builder();
 
-        Object[] textLetters = Arrays.stream(textArray).distinct().toArray();
+        for (char c : array) {
+            builder.add(Character.valueOf(c));
+        }
 
-        Arrays.stream(textLetters).forEach(l -> {
-            Long counter = Arrays.stream(textArray).filter(t -> t.equals(l)).count();
-            Integer newCounter = counter.intValue();
-            Character letter = l.toString().charAt(0);
-            result.put(letter, newCounter);
-        });
+        Stream<Character> stream = builder.build();
+
+        result.putAll(stream.collect(Collectors.groupingBy(c->c, Collectors.counting())));
 
         return result;
     } 
