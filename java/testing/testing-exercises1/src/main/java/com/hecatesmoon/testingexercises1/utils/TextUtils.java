@@ -3,7 +3,7 @@ package com.hecatesmoon.testingexercises1.utils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.stream.IntStream;
 
 public class TextUtils {
     
@@ -75,17 +75,9 @@ public class TextUtils {
     }
 
     public Map<Character, Long> frequencyCounter(String text){
-        Map<Character, Long> result = new HashMap<>();
+        IntStream intStream = text.chars();
 
-        char[] array = text.toCharArray();
-        Stream.Builder<Character> builder = Stream.builder();
-
-        for (char c : array) {
-            builder.add(Character.valueOf(c));
-        }
-
-        Stream<Character> stream = builder.build();
-        result.putAll(stream.collect(Collectors.groupingBy(c->c, Collectors.counting())));
+        Map<Character, Long> result = intStream.mapToObj(c -> (char) c).collect(Collectors.groupingBy(c->c, Collectors.counting()));
 
         return result;
     } 
