@@ -1,10 +1,7 @@
 package com.hecatesmoon.testingexercises1.utils;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -88,7 +85,6 @@ public class TextUtils {
         }
 
         Stream<Character> stream = builder.build();
-
         result.putAll(stream.collect(Collectors.groupingBy(c->c, Collectors.counting())));
 
         return result;
