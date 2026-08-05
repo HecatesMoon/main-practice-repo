@@ -2,7 +2,11 @@ package com.hecatesmoon.testingexercises1.utils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class StatUtils {
@@ -31,6 +35,12 @@ public class StatUtils {
 
             return Double.valueOf(result);
         }
+    }
+
+    public Optional<Integer> calculateMode(List<Integer> numbers){
+       Map<Integer, Long> frequency = numbers.stream().collect(Collectors.groupingBy(n -> n, Collectors.counting()));
+
+       return frequency.keySet().stream().max(Comparator.comparingLong(frequency::get));
     }
 
 }
