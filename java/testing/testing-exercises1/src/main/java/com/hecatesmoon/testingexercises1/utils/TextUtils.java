@@ -1,6 +1,5 @@
 package com.hecatesmoon.testingexercises1.utils;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;

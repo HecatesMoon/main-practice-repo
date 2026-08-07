@@ -2,11 +2,9 @@ package com.hecatesmoon.testingexercises1.utils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class StatUtils {
@@ -40,7 +38,20 @@ public class StatUtils {
     public Optional<Integer> calculateMode(List<Integer> numbers){
        Map<Integer, Long> frequency = numbers.stream().collect(Collectors.groupingBy(n -> n, Collectors.counting()));
 
-       return frequency.keySet().stream().max(Comparator.comparingLong(frequency::get));
+        List<Integer> orderedForFrequency = frequency.keySet().stream()
+                                                    .sorted(Comparator.comparingLong(frequency::get).reversed())
+                                                    .toList();
+
+        List<Optional<Integer>> modeListKeys = orderedForFrequency.stream()
+                                                    .filter(k -> frequency.get(k) == frequency.get(orderedForFrequency.get(0)))
+                                                    .map(k -> Optional.of(k))
+                                                    .toList();
+
+        if (modeListKeys.size() == orderedForFrequency.size()) {
+            return Optional.empty();
+        } else {
+            return modeListKeys.get(0); //made the method to give more than one mode
+        }
     }
 
 }
