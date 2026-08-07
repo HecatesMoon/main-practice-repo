@@ -12,10 +12,15 @@ public class StatUtils {
     public StatUtils(){}
 
     public Double calculateAverage(List<Integer> numbers){
+
+        if (numbers.isEmpty()) throw new IllegalArgumentException("list is empty");
+
         return numbers.stream().collect(Collectors.averagingInt(n -> n));
     }
 
     public Double calculateMedian(List<Integer> numbers){
+
+        if (numbers.isEmpty()) throw new IllegalArgumentException("list is empty");
 
         ArrayList<Integer> list = new ArrayList<>();
 
@@ -36,6 +41,9 @@ public class StatUtils {
     }
 
     public Optional<Integer> calculateMode(List<Integer> numbers){
+
+        if (numbers.isEmpty()) throw new IllegalArgumentException("list is empty");
+
        Map<Integer, Long> frequency = numbers.stream().collect(Collectors.groupingBy(n -> n, Collectors.counting()));
 
         List<Integer> orderedForFrequency = frequency.keySet().stream()
