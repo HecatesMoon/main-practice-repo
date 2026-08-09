@@ -12,7 +12,7 @@ public class RutUtils {
             throw new InvalidRutException("you need to write a rut: " + rut);
         }
 
-        if (!rut.matches("^[0-9]+-[0-9]?$")){
+        if (!rut.matches("^[0-9]+-[0-9kK]{1}$")){
             throw new InvalidRutException("you need to write it in a valid format (12345678-9)");
         }
 
@@ -35,10 +35,12 @@ public class RutUtils {
         }
 
         int verificationDigit = 11 - (total % 11);
-
-        String stringVerificationDigit = (verificationDigit == 0) ? "K" : String.valueOf(verificationDigit);
-
-        return rut.endsWith("-" + stringVerificationDigit);
+        //todo: this is literally wrong, fix later 
+        String stringVerificationDigit = String.valueOf(verificationDigit);
+        stringVerificationDigit = (verificationDigit == 11) ? "0" : stringVerificationDigit;
+        stringVerificationDigit = (verificationDigit == 10) ? "k" : stringVerificationDigit;
+    
+        return rut.toLowerCase().endsWith("-" + stringVerificationDigit);
         
     }
 
