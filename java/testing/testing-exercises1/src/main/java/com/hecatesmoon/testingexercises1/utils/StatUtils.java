@@ -51,7 +51,7 @@ public class StatUtils {
                                                     .toList();
 
         List<Optional<Integer>> modeListKeys = orderedForFrequency.stream()
-                                                    .filter(k -> frequency.get(k) == frequency.get(orderedForFrequency.get(0)))
+                                                    .filter(k -> frequency.get(k).equals(frequency.get(orderedForFrequency.get(0))))
                                                     .map(k -> Optional.of(k))
                                                     .toList();
 
