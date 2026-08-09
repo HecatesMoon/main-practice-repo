@@ -1,6 +1,7 @@
 package com.hecatesmoon.testingexercises1.inventory;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.naming.InsufficientResourcesException;
@@ -38,6 +39,10 @@ public class SimpleInventory {
         int newValue = inventory.get(product) - qty;
 
         inventory.put(product, newValue);
+    }
+
+    public List<String> lowStockProducts(int threshold){
+        return inventory.keySet().stream().filter(p -> inventory.get(p) >= threshold).toList();
     }
 
 
