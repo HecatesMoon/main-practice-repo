@@ -1,5 +1,6 @@
 package com.hecatesmoon.testingexercises1.inventory;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +44,10 @@ public class SimpleInventory {
 
     public List<String> lowStockProducts(int threshold){
         return inventory.keySet().stream().filter(p -> inventory.get(p) >= threshold).toList();
+    }
+
+    public List<String> productsOrderedByQty(){
+        return inventory.keySet().stream().sorted(Comparator.comparing(p -> inventory.get(p))).toList();
     }
 
 
