@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.naming.InsufficientResourcesException;
-
 import com.hecatesmoon.testingexercises1.exceptions.InsufficientStockException;
 import com.hecatesmoon.testingexercises1.exceptions.ProductNotFoundException;
 
@@ -43,13 +41,21 @@ public class SimpleInventory {
     }
 
     public List<String> lowStockProducts(int threshold){
+        if (inventory.isEmpty()){
+            System.out.println("the inventory is empty");
+        }
         return inventory.keySet().stream().filter(p -> inventory.get(p) >= threshold).toList();
     }
 
     public List<String> productsOrderedByQty(){
+        if (inventory.isEmpty()){
+            System.out.println("the inventory is empty");
+        }
         return inventory.keySet().stream().sorted(Comparator.comparing(p -> inventory.get(p))).toList();
     }
 
-
+    public Map<String, Integer> getInventory(){
+        return inventory;
+    }
 
 }
