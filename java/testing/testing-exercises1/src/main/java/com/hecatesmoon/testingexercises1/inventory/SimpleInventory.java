@@ -44,7 +44,7 @@ public class SimpleInventory {
         if (inventory.isEmpty()){
             System.out.println("the inventory is empty");
         }
-        return inventory.keySet().stream().filter(p -> inventory.get(p) >= threshold).toList();
+        return inventory.keySet().stream().filter(p -> inventory.get(p) <= threshold).toList();
     }
 
     public List<String> productsOrderedByQty(){
