@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.hecatesmoon.testingexercises1.exceptions.InsufficientStockException;
+import com.hecatesmoon.testingexercises1.exceptions.InventoryIsEmptyException;
+import com.hecatesmoon.testingexercises1.exceptions.ProductAlreadyExistsException;
 import com.hecatesmoon.testingexercises1.exceptions.ProductNotFoundException;
 
 public class SimpleInventory {
@@ -16,8 +18,7 @@ public class SimpleInventory {
 
     public void addProduct(String product, int qty){
         if (inventory.containsKey(product)){
-            System.out.println("This product already exists");
-            return;
+            throw new ProductAlreadyExistsException("This product already exists in the inventory: " + product);
         }
         inventory.put(product, qty);
     }
@@ -42,14 +43,14 @@ public class SimpleInventory {
 
     public List<String> lowStockProducts(int threshold){
         if (inventory.isEmpty()){
-            System.out.println("the inventory is empty");
+            throw new InventoryIsEmptyException("The inventory is empty, there is nothing to display");
         }
         return inventory.keySet().stream().filter(p -> inventory.get(p) <= threshold).toList();
     }
 
     public List<String> productsOrderedByQty(){
         if (inventory.isEmpty()){
-            System.out.println("the inventory is empty");
+            throw new InventoryIsEmptyException("The inventory is empty, there is norhing to display");
         }
         return inventory.keySet().stream().sorted(Comparator.comparing(p -> inventory.get(p))).toList();
     }
