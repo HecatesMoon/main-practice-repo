@@ -20,7 +20,7 @@ public class RutUtils {
     }
 
     private boolean verificationDigitCheck(String rut){
-
+        //todo: maybe add way for "infinite" rut lenght to use multipliers
         int[] multipliers = {2, 3, 4, 5, 6, 7, 2, 3, 4, 5, 6, 7};
 
         String cleanRut = rut.substring(0, rut.length() - 2);
