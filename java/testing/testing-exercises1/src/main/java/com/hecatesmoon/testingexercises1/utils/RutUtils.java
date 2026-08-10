@@ -35,7 +35,6 @@ public class RutUtils {
         }
 
         int verificationDigit = 11 - (total % 11);
-        //todo: this is literally wrong, fix later 
         String stringVerificationDigit = String.valueOf(verificationDigit);
         stringVerificationDigit = (verificationDigit == 11) ? "0" : stringVerificationDigit;
         stringVerificationDigit = (verificationDigit == 10) ? "k" : stringVerificationDigit;
