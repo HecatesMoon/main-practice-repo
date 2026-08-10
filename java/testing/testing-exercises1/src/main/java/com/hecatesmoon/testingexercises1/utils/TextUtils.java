@@ -1,5 +1,6 @@
 package com.hecatesmoon.testingexercises1.utils;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -73,12 +74,16 @@ public class TextUtils {
         return reversedText.toString();
     }
 
-    public Map<Character, Long> frequencyCounter(String text){
+    public Map<Character, Integer> frequencyCounter(String text){
         IntStream intStream = text.chars();
 
         Map<Character, Long> result = intStream.mapToObj(c -> (char) c).collect(Collectors.groupingBy(c->c, Collectors.counting()));
 
-        return result;
+        Map<Character, Integer> newResult = new HashMap<>();
+
+        result.keySet().stream().forEach(k -> newResult.put(k, (Integer) result.get(k).intValue()));
+
+        return newResult;
     } 
 
 }
