@@ -1,5 +1,6 @@
 package com.hecatesmoon.testingexercises1.inventory;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -56,7 +57,7 @@ public class SimpleInventory {
     }
 
     public Map<String, Integer> getInventory(){
-        return inventory;
+        return Collections.unmodifiableMap(inventory);
     }
 
 }
