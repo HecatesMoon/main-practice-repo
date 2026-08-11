@@ -2,6 +2,7 @@ package com.hecatesmoon.testingexercises1.utils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -46,21 +47,8 @@ public class TextUtils {
     }
 
     private boolean isVocal(char letter){
-        String stringLetter = String.valueOf(letter);
-        stringLetter = stringLetter.toLowerCase();
-        if(stringLetter.equals("a")) return true;
-        if(stringLetter.equals("e")) return true;
-        if(stringLetter.equals("i")) return true;
-        if(stringLetter.equals("o")) return true;
-        if(stringLetter.equals("u")) return true;
-
-        if(stringLetter.equals("á")) return true;
-        if(stringLetter.equals("é")) return true;
-        if(stringLetter.equals("í")) return true;
-        if(stringLetter.equals("ó")) return true;
-        if(stringLetter.equals("ú")) return true;
-
-        return false;
+        Set<Character> vocals = Set.of('a', 'e', 'i', 'o', 'u', 'á', 'é', 'í', 'ó', 'ú');
+        return vocals.contains(Character.toLowerCase(letter));
     }
 
     public String reverseText(String text){
