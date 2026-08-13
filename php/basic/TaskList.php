@@ -18,11 +18,9 @@ foreach($tasks as $task){
 
 function filterByPriorty($tasks, $priority){
     $newArray = [];
-    $index = 0;
     foreach($tasks as $task){
         if ($priority === $task["priority"]){
-            $newArray[$index] = $task;
-            $index++;
+            $newArray[] = $task;
         }
     }
 
