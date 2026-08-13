@@ -60,6 +60,8 @@ public class TextUtilsTest {
     }
 
 
+
+
     @Test
     public void testCountVocals_FourVocalsWord(){
         int result = textUtils.countVocals("acetato");
@@ -137,4 +139,64 @@ public class TextUtilsTest {
         Assertions.assertEquals(10, result);
     }
 
+
+
+
+    @Test
+    public void testReverseText_LowerCaseWord(){
+        String result = textUtils.reverseText("hipopotamo");
+
+        Assertions.assertEquals("omatopopih", result);
+    }
+
+    @Test
+    public void testReverseText_UpperCaseWord(){
+        String result = textUtils.reverseText("TOMATES");
+
+        Assertions.assertEquals("SETAMOT", result);
+    }
+    
+    @Test
+    public void testReverseText_MoreThanOneWord(){
+        String result = textUtils.reverseText("i ate pizza");
+
+        Assertions.assertEquals("azzip eta i", result);
+    }
+
+    
+    @Test
+    public void testReverseText_WordWithRandomSpaces(){
+        String result = textUtils.reverseText("  azu  ca re ro   ");
+
+        Assertions.assertEquals("   or er ac  uza  ", result);
+    }
+    
+    @Test
+    public void testReverseText_EmptyString(){
+        String result = textUtils.reverseText("");
+
+        Assertions.assertEquals("", result);
+    }
+
+    @Test
+    public void testReverseText_OneLetter(){
+        String result = textUtils.reverseText("a");
+
+        Assertions.assertEquals("a", result);
+    }
+
+    @Test
+    public void testReverseText_OnlySpaces(){
+        String result = textUtils.reverseText("    ");
+
+        Assertions.assertEquals("    ", result);
+    }
+
+    
+    @Test
+    public void testReverseText_ConcatenatedString(){
+        String result = textUtils.reverseText("El gran " + "Salto");
+
+        Assertions.assertEquals("otlaS narg lE", result);
+    }
 }
