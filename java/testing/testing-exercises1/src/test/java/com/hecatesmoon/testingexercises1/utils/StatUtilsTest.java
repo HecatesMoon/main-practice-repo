@@ -48,4 +48,52 @@ public class StatUtilsTest {
             statUtils.calculateAverage(list);
         });
     }
+
+
+
+
+    @Test
+    public void testCalculateMedian_OddQuantityNumberSortedList(){
+        List<Integer> list = List.of(1, 2, 3, 4, 5);
+
+        Double result = statUtils.calculateMedian(list);
+
+        Assertions.assertEquals(3, result);
+    }
+
+    @Test
+    public void testCalculateMedian_EvenQuantityNumberSortedList(){
+        List<Integer> list = List.of(1, 2, 3, 4, 5, 6);
+
+        Double result = statUtils.calculateMedian(list);
+
+        Assertions.assertEquals(3.5, result);
+    }
+
+    @Test
+    public void testCalculateMedian_OddQuantityNumberUnsortedList(){
+        List<Integer> list = List.of(8, 4, 12, 3, 15);
+
+        Double result = statUtils.calculateMedian(list);
+
+        Assertions.assertEquals(8, result);
+    }
+
+    @Test
+    public void testCalculateMedian_EvenQuantityNumberUnsortedList(){
+        List<Integer> list = List.of(8, 4, 12, 3, 15, 23, 5, 7);
+
+        Double result = statUtils.calculateMedian(list);
+
+        Assertions.assertEquals(7.5, result);
+    }
+
+    @Test
+    public void testCalculateMedian_EmptyList(){
+        List<Integer> list = List.of();
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            statUtils.calculateMedian(list);
+        });
+    }
 }
