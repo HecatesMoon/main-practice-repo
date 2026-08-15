@@ -1,6 +1,7 @@
 package com.hecatesmoon.testingexercises1.utils;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -95,5 +96,43 @@ public class StatUtilsTest {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             statUtils.calculateMedian(list);
         });
+    }
+
+
+
+    @Test
+    public void testCalculateMode_OneMode(){
+        List<Integer> list = List.of(2, 4, 6, 7, 5, 8, 2, 1);
+
+        Optional<Integer> result = statUtils.calculateMode(list);
+
+        Assertions.assertEquals(Optional.of(2), result);
+    }
+
+    @Test
+    public void testCalculateMode_MoreThanOneMode(){
+        List<Integer> list = List.of(2, 1, 4, 6, 7, 5, 8, 2, 1, 4);
+
+        Optional<Integer> result = statUtils.calculateMode(list);
+
+        Assertions.assertEquals(Optional.of(4), result);
+    }
+
+    @Test
+    public void testCalculateMode_NoMode(){
+        List<Integer> list = List.of(2, 2, 4, 4, 6, 6, 1, 1);
+
+        Optional<Integer> result = statUtils.calculateMode(list);
+
+        Assertions.assertEquals(Optional.empty(), result);
+    }
+
+    @Test
+    public void testCalculateMode_NoList(){
+        List<Integer> list = List.of();
+
+        Optional<Integer> result = statUtils.calculateMode(list);
+
+        Assertions.assertEquals(Optional.empty(), result);
     }
 }
