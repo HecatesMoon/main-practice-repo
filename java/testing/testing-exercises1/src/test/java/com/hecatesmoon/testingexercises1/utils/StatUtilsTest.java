@@ -14,12 +14,30 @@ public class StatUtilsTest {
     }
 
     @Test
-    public void testCalculateAverage_NumberList(){
+    public void testCalculateAverage_OddQuantityNumberList(){
         List<Integer> list = List.of(2, 4, 6, 8, 10);
 
         Double result = statUtils.calculateAverage(list);
 
         Assertions.assertEquals(6, result);
+    }
+
+    @Test
+    public void testCalculateAverage_EvenQuantityNumberList(){
+        List<Integer> list = List.of(2, 4, 6, 8, 10, 12);
+
+        Double result = statUtils.calculateAverage(list);
+
+        Assertions.assertEquals(7, result);
+    }
+
+    @Test
+    public void testCalculateAverage_NonWholeNumberResult(){
+        List<Integer> list = List.of(2, 2, 3, 3);
+
+        Double result = statUtils.calculateAverage(list);
+
+        Assertions.assertEquals(2, result);
     }
 
     @Test
