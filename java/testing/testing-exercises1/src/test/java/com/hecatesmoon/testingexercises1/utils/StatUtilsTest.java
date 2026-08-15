@@ -37,7 +37,7 @@ public class StatUtilsTest {
 
         Double result = statUtils.calculateAverage(list);
 
-        Assertions.assertEquals(2, result);
+        Assertions.assertEquals(2.5, result);
     }
 
     @Test
