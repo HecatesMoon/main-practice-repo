@@ -47,7 +47,7 @@ public class StatUtils {
        Map<Integer, Long> frequency = numbers.stream().collect(Collectors.groupingBy(n -> n, Collectors.counting()));
 
         List<Integer> orderedForFrequency = frequency.keySet().stream()
-                                                    .sorted(Comparator.comparingLong(frequency::get).reversed())
+                                                    .sorted(Comparator.<Integer>comparingLong(frequency::get).thenComparing(Comparator.naturalOrder()).reversed())
                                                     .toList();
 
         List<Optional<Integer>> modeListKeys = orderedForFrequency.stream()
@@ -58,7 +58,7 @@ public class StatUtils {
         if (modeListKeys.size() == orderedForFrequency.size()) {
             return Optional.empty();
         } else {
-            return modeListKeys.get(0); //made the method to give more than one mode
+            return modeListKeys.get(0); //todo:made the method to give more than one mode
         }
     }
 
