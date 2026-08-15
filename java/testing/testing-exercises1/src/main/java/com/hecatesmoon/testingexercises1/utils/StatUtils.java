@@ -42,7 +42,7 @@ public class StatUtils {
 
     public Optional<Integer> calculateMode(List<Integer> numbers){
 
-        if (numbers.isEmpty()) throw new IllegalArgumentException("list is empty");
+        if (numbers.isEmpty()) return Optional.empty();
 
        Map<Integer, Long> frequency = numbers.stream().collect(Collectors.groupingBy(n -> n, Collectors.counting()));
 
