@@ -272,7 +272,7 @@ public class TextUtilsTest {
     public void testFrequencyCounter_MultipleWords(){
         Map<Character, Integer> result = textUtils.frequencyCounter("fight without fear");
 
-        Map<Character, Integer> expected = new HashMap();
+        Map<Character, Integer> expected = new HashMap<>();
         Map<Character, Integer> part1 = Map.of('f', 2, 'i', 2, 'g', 1, 'h', 2, 't', 3, ' ', 2, 'w', 1, 'o', 1, 'u', 1, 'e', 1);
         Map<Character, Integer> part2 = Map.of('a', 1, 'r', 1);
         expected.putAll(part1);
