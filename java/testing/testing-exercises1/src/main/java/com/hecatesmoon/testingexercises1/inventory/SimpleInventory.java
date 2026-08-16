@@ -18,6 +18,9 @@ public class SimpleInventory {
     public SimpleInventory(){}
 
     public void addProduct(String product, int qty){
+
+        product = product.toLowerCase();
+
         if (inventory.containsKey(product)){
             throw new ProductAlreadyExistsException("This product already exists in the inventory: " + product);
         }
@@ -25,10 +28,15 @@ public class SimpleInventory {
     }
 
     public void editProductQty(String product, int qty){
+        product = product.toLowerCase();
+
         inventory.put(product, qty);
     }
 
     public void reduceStock(String product, int qty){
+
+         product = product.toLowerCase();
+
         if (!inventory.containsKey(product)){
             throw new ProductNotFoundException("this product does not exist: " + product);
         }
