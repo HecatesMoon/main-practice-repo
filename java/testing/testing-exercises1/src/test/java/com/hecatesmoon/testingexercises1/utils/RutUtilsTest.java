@@ -23,7 +23,7 @@ public class RutUtilsTest {
     public void testRutValidator_ValidRuts(String rut){
         boolean result = rutUtils.rutValidator(rut);
 
-        Assertions.assertEquals(true, result);
+        Assertions.assertTrue(result);
     }
 
     @ParameterizedTest
@@ -35,7 +35,7 @@ public class RutUtilsTest {
     public void testRutValidator_InvalidVerificationDigit(String rut){
         boolean result = rutUtils.rutValidator(rut);
 
-        Assertions.assertEquals(false, result);
+        Assertions.assertFalse(result);
     }
 
     @Test
@@ -44,7 +44,7 @@ public class RutUtilsTest {
 
         boolean result = rutUtils.rutValidator(rut);
 
-        Assertions.assertEquals(true, result);
+        Assertions.assertTrue(result);
     }
 
     @Test
