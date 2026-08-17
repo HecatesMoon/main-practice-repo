@@ -76,7 +76,7 @@ public class SimpleInventory {
         }
         return inventory.keySet().stream()
                                 .sorted(Comparator.<String, Integer>comparing(p -> inventory.get(p)).thenComparing(Comparator.naturalOrder()))
-                                .map(i -> i + ", " + inventory.get(i))
+                                .map(i -> i + ": " + inventory.get(i))
                                 .toList();
     }
 
