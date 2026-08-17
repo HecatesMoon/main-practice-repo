@@ -41,6 +41,10 @@ public class SimpleInventory {
 
          product = product.toLowerCase();
 
+        if (qty < 0){
+            throw new IllegalArgumentException("The quantity to reduce has to be positive");
+        }
+
         if (!inventory.containsKey(product)){
             throw new ProductNotFoundException("this product does not exist: " + product);
         }
