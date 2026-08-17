@@ -119,7 +119,7 @@ public class SimpleInventoryTest {
     }
 
     @Test
-    public void testLowStockProducts_SimpleList(){
+    public void testLowStockProducts_SimpleListThresholdLimit(){
         inventory.addProduct("apple pie", 12);
         inventory.addProduct("chocolate bar", 16);
         inventory.addProduct("milkshake", 7);
@@ -133,10 +133,52 @@ public class SimpleInventoryTest {
     }
 
     @Test
+    public void testLowStockProducts_SimpleListEmptyResult(){
+        inventory.addProduct("apple pie", 12);
+        inventory.addProduct("chocolate bar", 16);
+        inventory.addProduct("milkshake", 7);
+        inventory.addProduct("ice cream", 8);
+        inventory.addProduct("melon pan", 10);
+
+        List<String> result = inventory.lowStockProducts(6);
+        List<String> expected = List.of();
+
+        Assertions.assertIterableEquals(expected, result);
+    }
+
+    @Test
+    public void testLowStockProducts_SimpleList(){
+        inventory.addProduct("apple pie", 12);
+        inventory.addProduct("chocolate bar", 16);
+        inventory.addProduct("milkshake", 7);
+        inventory.addProduct("ice cream", 8);
+        inventory.addProduct("melon pan", 10);
+
+        List<String> result = inventory.lowStockProducts(9);
+        List<String> expected = List.of("milkshake", "ice cream");
+
+        Assertions.assertIterableEquals(expected, result);
+    }
+
+    @Test
     public void testLowStockProducts_EmptyList(){
        
         Assertions.assertThrows(InventoryIsEmptyException.class, () -> {
             inventory.lowStockProducts(4);
+        });
+
+    }
+
+    @Test
+    public void testLowStockProducts_LessThanOne(){
+        inventory.addProduct("apple pie", 12);
+        inventory.addProduct("chocolate bar", 16);
+        inventory.addProduct("milkshake", 7);
+        inventory.addProduct("ice cream", 8);
+        inventory.addProduct("melon pan", 10);
+       
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            inventory.lowStockProducts(-4);
         });
 
     }
