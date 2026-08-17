@@ -17,14 +17,10 @@ foreach($tasks as $task){
 }
 
 function filterByPriorty($tasks, $priority){
-    $newArray = [];
-    foreach($tasks as $task){
-        if ($priority === $task["priority"]){
-            $newArray[] = $task;
-        }
-    }
-
-    return $newArray;
+    
+    return array_filter($tasks, function($task) use ($priority) {
+        return $task["priority"] == $priority;
+    });
 }
 
 $highPriorityTasks = filterByPriorty($tasks,"high");
