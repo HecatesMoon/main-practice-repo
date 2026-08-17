@@ -16,14 +16,14 @@ foreach($tasks as $task){
     printTask($task);
 }
 
-function filterByPriorty($tasks, $priority){
+function filterByPriority($tasks, $priority){
     
     return array_filter($tasks, function($task) use ($priority) {
         return $task["priority"] == $priority;
     });
 }
 
-$highPriorityTasks = filterByPriorty($tasks,"high");
+$highPriorityTasks = filterByPriority($tasks,"high");
 
 foreach($highPriorityTasks as $task){
     printTask($task);
