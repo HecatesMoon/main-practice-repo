@@ -182,4 +182,61 @@ public class SimpleInventoryTest {
         });
 
     }
+
+    @Test
+    public void testProductsOrderedByQty_SimpleList(){
+        inventory.addProduct("apple pie", 12);
+        inventory.addProduct("chocolate bar", 16);
+        inventory.addProduct("milkshake", 7);
+        inventory.addProduct("ice cream", 8);
+        inventory.addProduct("melon pan", 10);
+
+        List<String> result = inventory.productsOrderedByQty();
+        List<String> expected = List.of("milkshake: 7", "ice cream: 8", "melon pan: 10", "apple pie: 12", "chocolate bar: 16");
+
+        Assertions.assertIterableEquals(expected, result);
+    }
+
+    @Test
+    public void testProductsOrderedByQty_DuplicateValuesButDifferentProduct(){
+        inventory.addProduct("apple pie", 12);
+        inventory.addProduct("chocolate bar", 12);
+        inventory.addProduct("milkshake", 7);
+        inventory.addProduct("ice cream", 7);
+        inventory.addProduct("melon pan", 10);
+        inventory.addProduct("avocado", 7);
+
+        List<String> result = inventory.productsOrderedByQty();
+        List<String> expected = List.of("avocado: 7", "ice cream: 7", "milkshake: 7",  "melon pan: 10", "apple pie: 12", "chocolate bar: 12");
+
+        Assertions.assertIterableEquals(expected, result);
+    }
+
+    @Test
+    public void testProductsOrderedByQty_EmptyList(){
+        
+        Assertions.assertThrows(InventoryIsEmptyException.class, () -> {
+            inventory.productsOrderedByQty();
+        });
+
+    }
+
+    @Test
+    public void testGetInventory_AddProductWithPut(){
+        Map<String, Integer> testInventory = inventory.getInventory();
+        
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> {
+            testInventory.put("cookies", 12);
+        });
+    }
+
+    @Test
+    public void testGetInventory_EditProductWithPut(){
+        inventory.addProduct("cookies", 12);
+        Map<String, Integer> testInventory = inventory.getInventory();
+        
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> {
+            testInventory.put("cookies", 4);
+        });
+    }
 }
