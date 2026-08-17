@@ -62,6 +62,11 @@ public class SimpleInventory {
         if (inventory.isEmpty()){
             throw new InventoryIsEmptyException("The inventory is empty, there is nothing to display");
         }
+
+        if (threshold < 1) {
+            throw new IllegalArgumentException("The threshold can not be less than 1");
+        }
+
         return inventory.keySet().stream().filter(p -> inventory.get(p) <= threshold).toList();
     }
 
