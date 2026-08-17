@@ -30,6 +30,10 @@ public class SimpleInventory {
     public void editProductQty(String product, int qty){
         product = product.toLowerCase();
 
+        if (!inventory.containsKey(product)){
+            throw new ProductNotFoundException("This product does not exists in the inventory: " + product);
+        }
+
         inventory.put(product, qty);
     }
 
