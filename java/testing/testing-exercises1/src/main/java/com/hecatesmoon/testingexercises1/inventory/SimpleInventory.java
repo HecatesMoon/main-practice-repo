@@ -74,7 +74,10 @@ public class SimpleInventory {
         if (inventory.isEmpty()){
             throw new InventoryIsEmptyException("The inventory is empty, there is norhing to display");
         }
-        return inventory.keySet().stream().sorted(Comparator.comparing(p -> inventory.get(p))).toList();
+        return inventory.keySet().stream()
+                                .sorted(Comparator.<String, Integer>comparing(p -> inventory.get(p)).thenComparing(Comparator.naturalOrder()))
+                                .map(i -> i + ", " + inventory.get(i))
+                                .toList();
     }
 
     public Map<String, Integer> getInventory(){
