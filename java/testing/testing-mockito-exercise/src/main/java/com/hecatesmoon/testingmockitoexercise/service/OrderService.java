@@ -1,0 +1,64 @@
+package com.hecatesmoon.testingmockitoexercise.service;
+
+import java.util.List;
+import java.util.UUID;
+
+import com.hecatesmoon.testingmockitoexercise.exceptions.InsufficientStockException;
+import com.hecatesmoon.testingmockitoexercise.interfaces.*;
+import com.hecatesmoon.testingmockitoexercise.model.Order;
+import com.hecatesmoon.testingmockitoexercise.model.OrderItem;
+import com.hecatesmoon.testingmockitoexercise.model.OrderStatus;
+
+public class OrderService {
+    
+    private final InventoryClient inventoryClient;
+    private final NotificationSender notificationSender;
+    private final OrderRepository orderRepository;
+
+    public OrderService (InventoryClient inventoryClient,
+                         NotificationSender notificationSender,
+                         OrderRepository orderRepository){
+        this.inventoryClient = inventoryClient;
+        this.notificationSender = notificationSender;
+        this.orderRepository = orderRepository;
+    }
+
+    public Order placeOrder(String customerId, List<OrderItem> items){
+        if (items.isEmpty()) throw new IllegalArgumentException("The items list is empty.");
+        if (items.equals(null)) throw new IllegalArgumentException("The items list is null.");
+
+        int countCheck = 0;
+
+        for (OrderItem item : items) {
+            if (inventoryClient.hasStock(item.getProductId(), item.getQuantity())){
+                throw new InsufficientStockException("We do not have enough stock for this item: " + item.getProductId());
+            } else {
+                // this feels a little unnecessary
+                countCheck++;
+            }
+        }
+
+        if (items.size() == countCheck){
+            for (OrderItem item : items) {
+                inventoryClient.reserveStock(item.getProductId(), item.getQuantity());
+            }
+        }
+
+        int total = 0;
+
+        for (OrderItem item : items){
+            total += item.getQuantity() * item.getPrice();
+        }
+
+        Order order = new Order();
+        order.setCustomerId(customerId);
+        order.setItems(items);
+        order.setStatus(OrderStatus.CONFIRMED);
+        order.setTotal(total);
+        order.setId(UUID.randomUUID().toString());
+
+        notificationSender.sendOrderConfirmation(customerId, order.getId());
+
+        return orderRepository.save(order);
+    }
+}
