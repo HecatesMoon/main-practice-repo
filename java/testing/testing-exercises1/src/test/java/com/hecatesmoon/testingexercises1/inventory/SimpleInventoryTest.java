@@ -210,7 +210,7 @@ public class SimpleInventoryTest {
         inventory.addProduct("melon pan", 10);
        
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            inventory.lowStockProducts(-4);
+            inventory.lowStockProducts(0);
         });
 
     }
