@@ -47,6 +47,16 @@ public class SimpleInventoryTest {
     }
 
     @Test
+    public void testAddProduct_UpperCaseProduct(){
+        String product = "PINEAPPLE";
+        int quantity = 4;
+
+        inventory.addProduct(product, quantity);
+
+        Assertions.assertTrue(inventory.getInventory().containsKey(product.toLowerCase()));
+    }
+
+    @Test
     public void testEditProductQty_ExistingProduct(){
         String product = "apple juice";
         int quantity = 12;
@@ -70,6 +80,17 @@ public class SimpleInventoryTest {
         Assertions.assertThrows(ProductNotFoundException.class, () -> {
             inventory.editProductQty(product2, quantity2);
             });
+    }
+
+    @Test
+    public void testEditProduct_UpperCaseProduct(){
+        String product = "PINEAPPLE";
+        int quantity = 4;
+        inventory.addProduct(product, quantity);
+
+        inventory.editProductQty(product.toLowerCase(), 10);
+
+        Assertions.assertEquals(10, inventory.getInventory().get(product.toLowerCase()));
     }
 
     @Test
@@ -116,6 +137,17 @@ public class SimpleInventoryTest {
         Assertions.assertThrows(ProductNotFoundException.class, () -> {
             inventory.reduceStock(product2, quantity2);
         });
+    }
+
+    @Test
+    public void testReduceStock_UpperCaseProduct(){
+        String product = "PINEAPPLE";
+        int quantity = 4;
+        inventory.addProduct(product, quantity);
+
+        inventory.reduceStock(product.toLowerCase(), 3);
+
+        Assertions.assertEquals(1, inventory.getInventory().get(product.toLowerCase()));
     }
 
     @Test
