@@ -63,7 +63,7 @@ public class RutUtilsTest {
         }
 
         @Test
-        public void testRUtValidator_InvalidRutWithDotsBetween(){
+        public void testRutValidator_InvalidRutWithDotsBetween(){
             String rut = "8.714.763-0";
 
             Assertions.assertThrows(InvalidRutException.class, () -> {
@@ -71,7 +71,7 @@ public class RutUtilsTest {
             });
         }
         @Test
-        public void testRUtValidator_InvalidRutWithLettersBetween(){
+        public void testRutValidator_InvalidRutWithLettersBetween(){
             String rut = "87ia763-0";
 
             Assertions.assertThrows(InvalidRutException.class, () -> {
@@ -79,7 +79,7 @@ public class RutUtilsTest {
             });
         }
         @Test
-        public void testRUtValidator_InvalidRutWithoutHypen(){
+        public void testRutValidator_InvalidRutWithoutHypen(){
             String rut = "87147630";
 
             Assertions.assertThrows(InvalidRutException.class, () -> {

@@ -36,7 +36,7 @@ public class SimpleInventoryTest {
     }
 
     @Test
-    public void testAddProdduct_AlreadyExistingProduct(){
+    public void testAddProduct_AlreadyExistingProduct(){
         String product = "apple pies";
         int quantity = 4;
         inventory.addProduct(product, quantity);
