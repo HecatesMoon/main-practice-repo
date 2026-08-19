@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.UUID;
 
 import com.hecatesmoon.testingmockitoexercise.exceptions.InsufficientStockException;
+import com.hecatesmoon.testingmockitoexercise.exceptions.OrderAlreadyCancelledException;
+import com.hecatesmoon.testingmockitoexercise.exceptions.OrderNotFoundException;
 import com.hecatesmoon.testingmockitoexercise.interfaces.*;
 import com.hecatesmoon.testingmockitoexercise.model.Order;
 import com.hecatesmoon.testingmockitoexercise.model.OrderItem;
@@ -30,7 +32,7 @@ public class OrderService {
         int countCheck = 0;
 
         for (OrderItem item : items) {
-            if (inventoryClient.hasStock(item.getProductId(), item.getQuantity())){
+            if (!inventoryClient.hasStock(item.getProductId(), item.getQuantity())){
                 throw new InsufficientStockException("We do not have enough stock for this item: " + item.getProductId());
             } else {
                 // this feels a little unnecessary
@@ -60,5 +62,19 @@ public class OrderService {
         notificationSender.sendOrderConfirmation(customerId, order.getId());
 
         return orderRepository.save(order);
+    }
+
+    public void cancelOrder(String orderId){
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException("This order could not be found: " + orderId));
+        if (order.getStatus() == OrderStatus.CANCELLED) throw new OrderAlreadyCancelledException("This order was already cancelled: " + orderId);
+
+        order.setStatus(OrderStatus.CANCELLED);
+        orderRepository.save(order);
+
+        notificationSender.sendCancellationNotice(order.getCustomerId(), order.getId());
+    }
+
+    public Order getOrder(String orderId){
+        return orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException("This order could not be found: " + orderId));
     }
 }
