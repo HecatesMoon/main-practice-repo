@@ -77,4 +77,12 @@ public class OrderService {
     public Order getOrder(String orderId){
         return orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException("This order could not be found: " + orderId));
     }
+
+    public List<Order> getOrdersByCustomer(String customerId){
+        List<Order> orders = orderRepository.findByCustomerId(customerId);
+
+        List<Order> confirmedOrders = orders.stream().filter(o -> o.getStatus() == OrderStatus.CONFIRMED).toList();
+
+        return confirmedOrders;
+    }
 }
