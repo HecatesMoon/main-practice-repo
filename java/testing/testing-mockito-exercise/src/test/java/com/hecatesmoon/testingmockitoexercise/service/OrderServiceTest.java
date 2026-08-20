@@ -26,7 +26,7 @@ public class OrderServiceTest {
     private final OrderService orderService = new OrderService(inventoryClientMock, notificationSenderMock, orderRepositoryMock);
 
     @Test
-    public void PlaceOrder_OneItemWithStock(){
+    public void placeOrder_OneItemWithStock(){
         OrderItem item = new OrderItem();
         item.setQuantity(1);
         item.setProductId("shoes");
@@ -35,7 +35,9 @@ public class OrderServiceTest {
         
         when(inventoryClientMock.hasStock("shoes", 1)).thenReturn(true);
         orderService.placeOrder("test", List.of(item));
+        verify(inventoryClientMock).reserveStock(item.getProductId(), item.getQuantity());
         verify(orderRepositoryMock).save(order.capture());
+        verify(notificationSenderMock).sendOrderConfirmation("test", order.getValue().getId());
 
         Assertions.assertEquals(OrderStatus.CONFIRMED, order.getValue().getStatus());
         Assertions.assertEquals(40000, order.getValue().getTotal());
