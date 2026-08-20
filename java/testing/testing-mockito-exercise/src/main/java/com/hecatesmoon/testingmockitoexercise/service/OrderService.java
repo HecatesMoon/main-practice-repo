@@ -26,8 +26,8 @@ public class OrderService {
     }
 
     public Order placeOrder(String customerId, List<OrderItem> items){
+        if (items == null) throw new IllegalArgumentException("The items list is null.");
         if (items.isEmpty()) throw new IllegalArgumentException("The items list is empty.");
-        if (items.equals(null)) throw new IllegalArgumentException("The items list is null.");
 
         int countCheck = 0;
 
