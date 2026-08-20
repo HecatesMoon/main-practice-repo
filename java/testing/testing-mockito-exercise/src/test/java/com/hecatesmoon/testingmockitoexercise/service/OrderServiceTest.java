@@ -142,10 +142,9 @@ public class OrderServiceTest {
             orderService.placeOrder("test", itemsList);
         });
 
-        verify(inventoryClientMock, never()).hasStock(anyString(), anyInt());
-        verify(inventoryClientMock, never()).reserveStock(anyString(), anyInt());
-        verify(notificationSenderMock, never()).sendOrderConfirmation(anyString(), anyString());
-        verify(orderRepositoryMock, never()).save(any(Order.class));
+        verifyNoInteractions(inventoryClientMock);
+        verifyNoInteractions(notificationSenderMock);
+        verifyNoInteractions(orderRepositoryMock);
     }
 
     @Test
@@ -154,9 +153,8 @@ public class OrderServiceTest {
             orderService.placeOrder("test", null);
         });
 
-        verify(inventoryClientMock, never()).hasStock(anyString(), anyInt());
-        verify(inventoryClientMock, never()).reserveStock(anyString(), anyInt());
-        verify(notificationSenderMock, never()).sendOrderConfirmation(anyString(), anyString());
-        verify(orderRepositoryMock, never()).save(any(Order.class));
+        verifyNoInteractions(inventoryClientMock);
+        verifyNoInteractions(notificationSenderMock);
+        verifyNoInteractions(orderRepositoryMock);
     }
 }
