@@ -64,7 +64,7 @@ public class OrderServiceTest {
             orderService.placeOrder("test", List.of(item));
         });
 
-        verify(inventoryClientMock, times(0)).reserveStock(item.getProductId(), item.getQuantity());
+        verify(inventoryClientMock, never()).reserveStock(item.getProductId(), item.getQuantity());
         verifyNoInteractions(notificationSenderMock);
         verifyNoInteractions(orderRepositoryMock);
     }
@@ -128,10 +128,10 @@ public class OrderServiceTest {
             orderService.placeOrder(customerId, itemsList);
         });
         
-        verify(inventoryClientMock, times(0)).hasStock(item3.getProductId(), item3.getQuantity());
-        verify(inventoryClientMock, times(0)).reserveStock(item1.getProductId(), item1.getQuantity());
-        verify(inventoryClientMock, times(0)).reserveStock(item2.getProductId(), item2.getQuantity());
-        verify(inventoryClientMock, times(0)).reserveStock(item3.getProductId(), item3.getQuantity());
+        verify(inventoryClientMock, never()).hasStock(item3.getProductId(), item3.getQuantity());
+        verify(inventoryClientMock, never()).reserveStock(item1.getProductId(), item1.getQuantity());
+        verify(inventoryClientMock, never()).reserveStock(item2.getProductId(), item2.getQuantity());
+        verify(inventoryClientMock, never()).reserveStock(item3.getProductId(), item3.getQuantity());
         verifyNoInteractions(orderRepositoryMock);
         verifyNoInteractions(notificationSenderMock);
     }
