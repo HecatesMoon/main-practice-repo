@@ -39,14 +39,18 @@ public class OrderServiceTest {
         item.setQuantity(1);
         item.setProductId("shoes");
         item.setPrice(40000);
+
         ArgumentCaptor<Order> order = ArgumentCaptor.forClass(Order.class);
+
         Order dummyOrder = new Order();
         dummyOrder.setId("order-999");
         Order resultDummyOrder;
         
         when(inventoryClientMock.hasStock("shoes", 1)).thenReturn(true);
         when(orderRepositoryMock.save(any(Order.class))).thenReturn(dummyOrder);
+        
         resultDummyOrder = orderService.placeOrder("test", List.of(item));
+        
         verify(inventoryClientMock, times(1)).reserveStock(item.getProductId(), item.getQuantity());
         verify(orderRepositoryMock, times(1)).save(order.capture());
         verify(notificationSenderMock, times(1)).sendOrderConfirmation("test", order.getValue().getId());
@@ -89,6 +93,7 @@ public class OrderServiceTest {
         item3.setQuantity(3);
         item3.setPrice(20000);
         List<OrderItem> itemsList = List.of(item1, item2, item3);
+
         String customerId = "test";
         ArgumentCaptor<Order> order = ArgumentCaptor.forClass(Order.class);
         Order dummyOrder = new Order();
@@ -106,7 +111,6 @@ public class OrderServiceTest {
         verify(inventoryClientMock, times(1)).reserveStock(item3.getProductId(), item3.getQuantity());
         verify(orderRepositoryMock, times(1)).save(order.capture());
         verify(notificationSenderMock, times(1)).sendOrderConfirmation(customerId, order.getValue().getId());
-
 
         Assertions.assertEquals(104000, order.getValue().getTotal());
         Assertions.assertEquals(OrderStatus.CONFIRMED, order.getValue().getStatus());
@@ -128,6 +132,7 @@ public class OrderServiceTest {
         item3.setQuantity(3);
         item3.setPrice(20000);
         List<OrderItem> itemsList = List.of(item1, item2, item3);
+
         String customerId = "test";
 
         when(inventoryClientMock.hasStock(item1.getProductId(), item1.getQuantity())).thenReturn(true);
