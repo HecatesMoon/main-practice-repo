@@ -1,5 +1,6 @@
 package com.hecatesmoon.testingmockitoexercise.service;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -15,6 +16,7 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.internal.matchers.Any;
 
 import com.hecatesmoon.testingmockitoexercise.exceptions.InsufficientStockException;
 import com.hecatesmoon.testingmockitoexercise.interfaces.InventoryClient;
@@ -39,15 +41,20 @@ public class OrderServiceTest {
         item.setProductId("shoes");
         item.setPrice(40000);
         ArgumentCaptor<Order> order = ArgumentCaptor.forClass(Order.class);
+        Order dummyOrder = new Order();
+        dummyOrder.setId("order-999");
+        Order resultDummyOrder;
         
         when(inventoryClientMock.hasStock("shoes", 1)).thenReturn(true);
-        orderService.placeOrder("test", List.of(item));
+        when(orderRepositoryMock.save(any(Order.class))).thenReturn(dummyOrder);
+        resultDummyOrder = orderService.placeOrder("test", List.of(item));
         verify(inventoryClientMock, times(1)).reserveStock(item.getProductId(), item.getQuantity());
         verify(orderRepositoryMock, times(1)).save(order.capture());
         verify(notificationSenderMock, times(1)).sendOrderConfirmation("test", order.getValue().getId());
 
         Assertions.assertEquals(OrderStatus.CONFIRMED, order.getValue().getStatus());
         Assertions.assertEquals(40000, order.getValue().getTotal());
+        Assertions.assertEquals(dummyOrder, resultDummyOrder);
     }
 
     @Test
@@ -85,12 +92,15 @@ public class OrderServiceTest {
         List<OrderItem> itemsList = List.of(item1, item2, item3);
         String customerId = "test";
         ArgumentCaptor<Order> order = ArgumentCaptor.forClass(Order.class);
+        Order dummyOrder = new Order();
+        dummyOrder.setId("order-999");
 
         when(inventoryClientMock.hasStock(item1.getProductId(), item1.getQuantity())).thenReturn(true);
         when(inventoryClientMock.hasStock(item2.getProductId(), item2.getQuantity())).thenReturn(true);
         when(inventoryClientMock.hasStock(item3.getProductId(), item3.getQuantity())).thenReturn(true);
+        when(orderRepositoryMock.save(any(Order.class))).thenReturn(dummyOrder);
 
-        orderService.placeOrder(customerId, itemsList);
+        Order resultDummyOrder = orderService.placeOrder(customerId, itemsList);
 
         verify(inventoryClientMock, times(1)).reserveStock(item1.getProductId(), item1.getQuantity());
         verify(inventoryClientMock, times(1)).reserveStock(item2.getProductId(), item2.getQuantity());
@@ -101,6 +111,7 @@ public class OrderServiceTest {
 
         Assertions.assertEquals(104000, order.getValue().getTotal());
         Assertions.assertEquals(OrderStatus.CONFIRMED, order.getValue().getStatus());
+        Assertions.assertEquals(dummyOrder, resultDummyOrder);
     }
 
     @Test
