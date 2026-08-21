@@ -1,6 +1,5 @@
 package com.hecatesmoon.testingmockitoexercise.service;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -100,8 +99,8 @@ public class OrderServiceTest {
         verify(notificationSenderMock, times(1)).sendOrderConfirmation(customerId, order.getValue().getId());
 
 
-        Assertions.assertEquals(order.getValue().getTotal(), 104000);
-        Assertions.assertEquals(order.getValue().getStatus(), OrderStatus.CONFIRMED);
+        Assertions.assertEquals(104000, order.getValue().getTotal());
+        Assertions.assertEquals(OrderStatus.CONFIRMED, order.getValue().getStatus());
     }
 
     @Test
