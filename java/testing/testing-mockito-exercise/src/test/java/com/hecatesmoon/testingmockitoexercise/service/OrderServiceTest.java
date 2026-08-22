@@ -56,7 +56,7 @@ public class OrderServiceTest {
         
         verify(inventoryClientMock, times(1)).reserveStock(item.getProductId(), item.getQuantity());
         verify(orderRepositoryMock, times(1)).save(order.capture());
-        verify(notificationSenderMock, times(1)).sendOrderConfirmation("test", order.getValue().getId());
+        verify(notificationSenderMock, times(1)).sendOrderConfirmation("test", dummyOrder.getId());
 
         Assertions.assertEquals(OrderStatus.CONFIRMED, order.getValue().getStatus());
         Assertions.assertEquals(40000, order.getValue().getTotal());
@@ -113,7 +113,7 @@ public class OrderServiceTest {
         verify(inventoryClientMock, times(1)).reserveStock(item2.getProductId(), item2.getQuantity());
         verify(inventoryClientMock, times(1)).reserveStock(item3.getProductId(), item3.getQuantity());
         verify(orderRepositoryMock, times(1)).save(order.capture());
-        verify(notificationSenderMock, times(1)).sendOrderConfirmation(customerId, order.getValue().getId());
+        verify(notificationSenderMock, times(1)).sendOrderConfirmation(customerId, dummyOrder.getId());
 
         Assertions.assertEquals(104000, order.getValue().getTotal());
         Assertions.assertEquals(OrderStatus.CONFIRMED, order.getValue().getStatus());
@@ -183,7 +183,7 @@ public class OrderServiceTest {
         verify(inventoryClientMock, times(1)).reserveStock(item2.getProductId(), item2.getQuantity());
         verify(inventoryClientMock, times(1)).reserveStock(item3.getProductId(), item3.getQuantity());
         verify(orderRepositoryMock, times(1)).save(order.capture());
-        verify(notificationSenderMock, times(1)).sendOrderConfirmation(customerId, order.getValue().getId());
+        verify(notificationSenderMock, times(1)).sendOrderConfirmation(customerId, dummyOrder.getId());
 
         Assertions.assertEquals(97501.37, order.getValue().getTotal());
         Assertions.assertEquals(OrderStatus.CONFIRMED, order.getValue().getStatus());
