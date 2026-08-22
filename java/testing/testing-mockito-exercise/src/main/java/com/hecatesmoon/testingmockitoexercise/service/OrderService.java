@@ -46,7 +46,7 @@ public class OrderService {
             }
         }
 
-        int total = 0;
+        double total = 0;
 
         for (OrderItem item : items){
             total += item.getQuantity() * item.getPrice();
