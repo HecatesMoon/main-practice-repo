@@ -52,9 +52,11 @@ public class OrderService {
         order.setTotal(total);
         order.setId(UUID.randomUUID().toString());
 
+        order = orderRepository.save(order);
+
         notificationSender.sendOrderConfirmation(customerId, order.getId());
 
-        return orderRepository.save(order);
+        return order;
     }
 
     public void cancelOrder(String orderId){
