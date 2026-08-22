@@ -12,12 +12,15 @@ import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import com.hecatesmoon.testingmockitoexercise.exceptions.InsufficientStockException;
+import com.hecatesmoon.testingmockitoexercise.exceptions.OrderAlreadyCancelledException;
+import com.hecatesmoon.testingmockitoexercise.exceptions.OrderNotFoundException;
 import com.hecatesmoon.testingmockitoexercise.interfaces.InventoryClient;
 import com.hecatesmoon.testingmockitoexercise.interfaces.NotificationSender;
 import com.hecatesmoon.testingmockitoexercise.interfaces.OrderRepository;
@@ -170,5 +173,183 @@ public class OrderServiceTest {
         verifyNoInteractions(inventoryClientMock);
         verifyNoInteractions(notificationSenderMock);
         verifyNoInteractions(orderRepositoryMock);
+    }
+
+    @Test
+    public void cancelOrder_CancelConfirmedOrder(){
+        Order order = new Order();
+        order.setStatus(OrderStatus.CONFIRMED);
+        order.setCustomerId("test");
+        String orderId = "order-123";
+        
+        when(orderRepositoryMock.findById(orderId)).thenReturn(Optional.of(order));
+        
+        orderService.cancelOrder(orderId);
+
+        verify(orderRepositoryMock, times(1)).save(order);
+        verify(notificationSenderMock, times(1)).sendCancellationNotice(order.getCustomerId(), order.getId());
+
+        Assertions.assertEquals(OrderStatus.CANCELLED, order.getStatus());
+    }
+
+    @Test
+    public void cancelOrder_CancelPendingOrder(){
+        Order order = new Order();
+        order.setStatus(OrderStatus.PENDING);
+        order.setCustomerId("test");
+        String orderId = "order-123";
+        
+        when(orderRepositoryMock.findById(orderId)).thenReturn(Optional.of(order));
+        
+        orderService.cancelOrder(orderId);
+
+        verify(orderRepositoryMock, times(1)).save(order);
+        verify(notificationSenderMock, times(1)).sendCancellationNotice(order.getCustomerId(), order.getId());
+
+        Assertions.assertEquals(OrderStatus.CANCELLED, order.getStatus());
+    }
+
+    @Test
+    public void cancelOrder_OrderDoesNotExistOrNull(){
+        String orderId = "order-123";
+
+        when(orderRepositoryMock.findById(orderId)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(OrderNotFoundException.class, () -> {
+            orderService.cancelOrder(orderId);
+        });
+
+        verify(orderRepositoryMock, never()).save(any(Order.class));
+        verifyNoInteractions(notificationSenderMock);
+    }
+
+    @Test
+    public void cancelOrder_OrderAlreadyCancelled(){
+        Order order = new Order();
+        order.setStatus(OrderStatus.CANCELLED);
+        String orderId = "order-123";
+
+        when(orderRepositoryMock.findById(orderId)).thenReturn(Optional.of(order));
+
+        Assertions.assertThrows(OrderAlreadyCancelledException.class, () -> {
+            orderService.cancelOrder(orderId);
+        });
+
+        verify(orderRepositoryMock, never()).save(any(Order.class));
+        verifyNoInteractions(notificationSenderMock);
+    }
+
+    @Test
+    public void getOrder_OrderExists(){
+        String orderId = "order-234";
+        Order order = new Order();
+        order.setId(orderId);
+        order.setCustomerId("test");
+
+        when(orderRepositoryMock.findById(orderId)).thenReturn(Optional.of(order));
+
+        Order resultOrder = orderService.getOrder(orderId);
+
+        Assertions.assertEquals(order, resultOrder);
+    }
+
+    @Test
+    public void getOrder_OrderDoesNotExist(){
+        String orderId =  "order-322";
+        
+        when(orderRepositoryMock.findById(orderId)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(OrderNotFoundException.class, () -> {
+            orderService.getOrder(orderId);
+        });
+    }
+
+    @Test
+    public void getOrdersByCustomer_OneOrderAndConfirmed(){
+        Order order1 = new Order();
+        order1.setStatus(OrderStatus.CONFIRMED);
+        List<Order> ordersList = List.of(order1);
+        List<Order> confirmedOrdersList = List.of(order1);
+        String customerId = "test";
+
+        when(orderRepositoryMock.findByCustomerId(customerId)).thenReturn(ordersList);
+
+        List<Order> result = orderService.getOrdersByCustomer(customerId);
+
+        Assertions.assertIterableEquals(confirmedOrdersList, result);
+    }
+
+    @Test
+    public void getOrdersByCustomer_OneOrderNotConfirmed(){
+        Order order1 = new Order();
+        order1.setStatus(OrderStatus.PENDING);
+        List<Order> ordersList = List.of(order1);
+        List<Order> confirmedOrdersList = Collections.emptyList();
+        String customerId = "test";
+
+        when(orderRepositoryMock.findByCustomerId(customerId)).thenReturn(ordersList);
+
+        List<Order> result = orderService.getOrdersByCustomer(customerId);
+
+        Assertions.assertIterableEquals(confirmedOrdersList, result);
+    }
+
+    @Test
+    public void getOrdersByCustomer_AllOrdersConfirmed(){
+        Order order1 = new Order();
+        order1.setStatus(OrderStatus.CONFIRMED);
+        Order order2 = new Order();
+        order2.setStatus(OrderStatus.CONFIRMED);
+        Order order3 = new Order();
+        order3.setStatus(OrderStatus.CONFIRMED);
+        Order order4 = new Order();
+        order4.setStatus(OrderStatus.CONFIRMED);
+        Order order5 = new Order();
+        order5.setStatus(OrderStatus.CONFIRMED);
+        List<Order> ordersList = List.of(order1, order2, order3, order4, order5);
+        List<Order> confirmedOrdersList = List.of(order1, order2, order3, order4, order5);
+        String customerId = "test";
+
+        when(orderRepositoryMock.findByCustomerId(customerId)).thenReturn(ordersList);
+
+        List<Order> result = orderService.getOrdersByCustomer(customerId);
+
+        Assertions.assertIterableEquals(confirmedOrdersList, result);
+    }
+
+    @Test
+    public void getOrdersByCustomer_NotAllOrdersConfirmed(){
+        Order order1 = new Order();
+        order1.setStatus(OrderStatus.CONFIRMED);
+        Order order2 = new Order();
+        order2.setStatus(OrderStatus.CONFIRMED);
+        Order order3 = new Order();
+        order3.setStatus(OrderStatus.PENDING);
+        Order order4 = new Order();
+        order4.setStatus(OrderStatus.CONFIRMED);
+        Order order5 = new Order();
+        order5.setStatus(OrderStatus.CANCELLED);
+        List<Order> ordersList = List.of(order1, order2, order3, order4, order5);
+        List<Order> confirmedOrdersList = List.of(order1, order2, order4);
+        String customerId = "test";
+
+        when(orderRepositoryMock.findByCustomerId(customerId)).thenReturn(ordersList);
+
+        List<Order> result = orderService.getOrdersByCustomer(customerId);
+
+        Assertions.assertIterableEquals(confirmedOrdersList, result);
+    }
+
+    @Test
+    public void getOrdersByCustomer_NoOrders(){
+        List<Order> ordersList = Collections.emptyList();
+        List<Order> confirmedOrdersList = Collections.emptyList();
+        String customerId = "test";
+
+        when(orderRepositoryMock.findByCustomerId(customerId)).thenReturn(ordersList);
+
+        List<Order> result = orderService.getOrdersByCustomer(customerId);
+
+        Assertions.assertIterableEquals(confirmedOrdersList, result);
     }
 }
