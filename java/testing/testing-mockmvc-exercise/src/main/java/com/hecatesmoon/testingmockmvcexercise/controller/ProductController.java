@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 @RequestMapping("/api")
@@ -65,6 +67,12 @@ public class ProductController {
         return buildResponse("product deleted successfully", HttpStatus.NO_CONTENT);
     }
 
+    @PutMapping("products/{id}")
+    public ResponseEntity<Map<String, Object>> putMethodName(@PathVariable Long id, @Valid @RequestBody  ProductRequestDTO product) {
+        productService.editProduct(id, product);        
+        return buildResponse(product, HttpStatus.OK);
+    }
+
     private ResponseEntity<Map<String,Object>> buildResponse(Object object, HttpStatusCode status){
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("time", LocalDate.now());
@@ -72,8 +80,4 @@ public class ProductController {
         response.put("response", object);
         return new ResponseEntity<Map<String,Object>>(response, status);
     }
-    
-    
-    
-    
 }
