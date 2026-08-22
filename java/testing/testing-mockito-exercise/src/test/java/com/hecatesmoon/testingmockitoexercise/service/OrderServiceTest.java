@@ -152,6 +152,45 @@ public class OrderServiceTest {
     }
 
     @Test
+    public void placeOrder_ItemsWithDecimalPrices(){
+        OrderItem item1 = new OrderItem();
+        item1.setProductId("shirt");
+        item1.setQuantity(2);
+        item1.setPrice(15999.99);
+        OrderItem item2 = new OrderItem();
+        item2.setProductId("cap");
+        item2.setQuantity(1);
+        item2.setPrice(11500.40);
+        OrderItem item3 = new OrderItem();
+        item3.setProductId("trousers");
+        item3.setQuantity(3);
+        item3.setPrice(18000.33);
+        List<OrderItem> itemsList = List.of(item1, item2, item3);
+
+        String customerId = "test";
+        ArgumentCaptor<Order> order = ArgumentCaptor.forClass(Order.class);
+        Order dummyOrder = new Order();
+        dummyOrder.setId("order-999");
+
+        when(inventoryClientMock.hasStock(item1.getProductId(), item1.getQuantity())).thenReturn(true);
+        when(inventoryClientMock.hasStock(item2.getProductId(), item2.getQuantity())).thenReturn(true);
+        when(inventoryClientMock.hasStock(item3.getProductId(), item3.getQuantity())).thenReturn(true);
+        when(orderRepositoryMock.save(any(Order.class))).thenReturn(dummyOrder);
+
+        Order resultDummyOrder = orderService.placeOrder(customerId, itemsList);
+
+        verify(inventoryClientMock, times(1)).reserveStock(item1.getProductId(), item1.getQuantity());
+        verify(inventoryClientMock, times(1)).reserveStock(item2.getProductId(), item2.getQuantity());
+        verify(inventoryClientMock, times(1)).reserveStock(item3.getProductId(), item3.getQuantity());
+        verify(orderRepositoryMock, times(1)).save(order.capture());
+        verify(notificationSenderMock, times(1)).sendOrderConfirmation(customerId, order.getValue().getId());
+
+        Assertions.assertEquals(97501.37, order.getValue().getTotal());
+        Assertions.assertEquals(OrderStatus.CONFIRMED, order.getValue().getStatus());
+        Assertions.assertEquals(dummyOrder, resultDummyOrder);
+    }
+
+    @Test
     public void placeOrder_EmptyList(){
         List<OrderItem> itemsList = Collections.emptyList();
 
