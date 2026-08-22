@@ -29,21 +29,14 @@ public class OrderService {
         if (items == null) throw new IllegalArgumentException("The items list is null.");
         if (items.isEmpty()) throw new IllegalArgumentException("The items list is empty.");
 
-        int countCheck = 0;
-
         for (OrderItem item : items) {
             if (!inventoryClient.hasStock(item.getProductId(), item.getQuantity())){
                 throw new InsufficientStockException("We do not have enough stock for this item: " + item.getProductId());
-            } else {
-                // this feels a little unnecessary
-                countCheck++;
             }
         }
 
-        if (items.size() == countCheck){
-            for (OrderItem item : items) {
-                inventoryClient.reserveStock(item.getProductId(), item.getQuantity());
-            }
+        for (OrderItem item : items) {
+            inventoryClient.reserveStock(item.getProductId(), item.getQuantity());
         }
 
         double total = 0;
