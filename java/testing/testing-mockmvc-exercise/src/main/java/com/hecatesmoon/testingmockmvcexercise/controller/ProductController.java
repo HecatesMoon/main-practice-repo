@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hecatesmoon.testingmockmvcexercise.dto.ProductRequestDTO;
 import com.hecatesmoon.testingmockmvcexercise.dto.ProductResponseDTO;
 import com.hecatesmoon.testingmockmvcexercise.service.ProductService;
+import com.hecatesmoon.testingmockmvcexercise.service.ProductServiceImpl;
 
 import jakarta.validation.Valid;
 
@@ -33,7 +34,7 @@ public class ProductController {
 
     private final ProductService productService;
 
-    public ProductController(ProductService service){
+    public ProductController(ProductServiceImpl service){
         this.productService = service;
     }
 
