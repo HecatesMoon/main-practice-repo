@@ -1,7 +1,9 @@
 package com.hecatesmoon.testingmockmvcexercise.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -12,7 +14,7 @@ import com.hecatesmoon.testingmockmvcexercise.exception.ProductNotFoundException
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    List<ProductResponseDTO> list = new ArrayList<>();
+    Map<Long,ProductResponseDTO> products = new HashMap<>();
     Long id = 6L;
 
     public ProductServiceImpl (){
@@ -46,12 +48,12 @@ public class ProductServiceImpl implements ProductService {
         product6.setName("socks");
         product6.setPrice(5);
         product6.setStock(17);
-        list.add(product1);
-        list.add(product2);
-        list.add(product3);
-        list.add(product4);
-        list.add(product5);
-        list.add(product6);
+        products.put(product1.getId(), product1);
+        products.put(product2.getId(), product2);
+        products.put(product3.getId(), product3);
+        products.put(product4.getId(), product4);
+        products.put(product5.getId(), product5);
+        products.put(product6.getId(), product6);
     }
 
     public ProductResponseDTO createProduct(ProductRequestDTO dto){
@@ -61,62 +63,53 @@ public class ProductServiceImpl implements ProductService {
         product.setName(dto.getName());
         product.setPrice(dto.getPrice());
         product.setStock(dto.getStock());
-        list.add(product);
+        products.put(product.getId(), product);
         return product;
-    };
+    }
+
     public ProductResponseDTO editProduct(Long id, ProductRequestDTO dto){
 
-        if (findById(id)==null){
+        ProductResponseDTO product = products.get(id);
+
+        if (product.equals(null)){
             throw new ProductNotFoundException("Product was not found, id:" + id);
         }
 
-        int i = findIndexById(id);
+        ProductResponseDTO newProduct = new ProductResponseDTO();
+        newProduct.setId(id);
+        newProduct.setName(dto.getName());
+        newProduct.setPrice(dto.getPrice());
+        newProduct.setStock(dto.getStock());
+        
+        return products.put(id, newProduct);
+    }
 
-        list.get(i).setName(dto.getName());
-        list.get(i).setPrice(dto.getPrice());
-        list.get(i).setStock(dto.getStock());
-
-        return list.get(i);
-    };
     public ProductResponseDTO getProductById(Long id){
-        ProductResponseDTO response = findById(id);
+        ProductResponseDTO response = products.get(id);
 
-        if (response==null){
+        if (response.equals(null)){
             throw new ProductNotFoundException("Product was not found, id:" + id);
         }
 
         return response;
-    };
+    }
+
     public List<ProductResponseDTO> listProducts(Double minPrice){
-        return list.stream().filter(p -> p.getPrice()>=minPrice).toList();
-    };
+        Map<Long, ProductResponseDTO> filteredProducts = new HashMap<>();
+
+        products.keySet().stream()
+                .filter(p -> products.get(p).getPrice()>=minPrice)
+                .forEach(l -> filteredProducts.put(l, products.get(l)));
+
+        List<ProductResponseDTO> list = new ArrayList<>(filteredProducts.values());
+        return list;
+    }
+
     public void deleteProduct(Long id){
-        if (findById(id)==null){
+        if (products.get(id).equals(null)){
             throw new ProductNotFoundException("Product was not found, id:" + id);
         }
 
-        int i = findIndexById(id);
-
-        list.remove(i);
-    };
-
-    private ProductResponseDTO findById(Long id){
-        for (ProductResponseDTO product : list){
-            if (id.equals(product.getId())){
-                return product;
-            }
-        }
-        return null;
-    }
-    private int findIndexById(Long id){
-        int index = 0;
-        for (ProductResponseDTO product : list){
-            if (id.equals(product.getId())){
-                return index;
-            } else {
-                index++;
-            }
-        }
-        return -1;
+        products.remove(id);
     }
 }
