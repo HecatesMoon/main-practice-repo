@@ -71,7 +71,7 @@ public class ProductServiceImpl implements ProductService {
 
         ProductResponseDTO product = products.get(id);
 
-        if (product.equals(null)){
+        if (product==null){
             throw new ProductNotFoundException("Product was not found, id:" + id);
         }
 
@@ -87,7 +87,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponseDTO getProductById(Long id){
         ProductResponseDTO response = products.get(id);
 
-        if (response.equals(null)){
+        if (response == null){
             throw new ProductNotFoundException("Product was not found, id:" + id);
         }
 
@@ -106,7 +106,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public void deleteProduct(Long id){
-        if (products.get(id).equals(null)){
+        if (products.get(id) == null){
             throw new ProductNotFoundException("Product was not found, id:" + id);
         }
 
