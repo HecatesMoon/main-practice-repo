@@ -8,7 +8,7 @@ import com.hecatesmoon.testingmockmvcexercise.service.ProductService;
 
 import jakarta.validation.Valid;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,7 +75,7 @@ public class ProductController {
 
     private ResponseEntity<Map<String,Object>> buildResponse(Object object, HttpStatusCode status){
         Map<String, Object> response = new LinkedHashMap<>();
-        response.put("time", LocalDate.now());
+        response.put("time", LocalDateTime.now());
         response.put("status", HttpStatus.OK.value());
         response.put("response", object);
         return new ResponseEntity<Map<String,Object>>(response, status);
