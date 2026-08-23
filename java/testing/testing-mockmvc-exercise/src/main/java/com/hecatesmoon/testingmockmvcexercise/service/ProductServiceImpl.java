@@ -13,7 +13,7 @@ import com.hecatesmoon.testingmockmvcexercise.exception.ProductNotFoundException
 public class ProductServiceImpl implements ProductService {
 
     List<ProductResponseDTO> list = new ArrayList<>();
-    static Long id = 5L;
+    Long id = 6L;
 
     public ProductServiceImpl (){
         ProductResponseDTO product1 = new ProductResponseDTO();
@@ -56,8 +56,8 @@ public class ProductServiceImpl implements ProductService {
 
     public ProductResponseDTO createProduct(ProductRequestDTO dto){
         ProductResponseDTO product = new ProductResponseDTO();
-        product.setId(ProductServiceImpl.id+1);
-        ProductServiceImpl.id++;
+        product.setId(id+1);
+        id++;
         product.setName(dto.getName());
         product.setPrice(dto.getPrice());
         product.setStock(dto.getStock());
