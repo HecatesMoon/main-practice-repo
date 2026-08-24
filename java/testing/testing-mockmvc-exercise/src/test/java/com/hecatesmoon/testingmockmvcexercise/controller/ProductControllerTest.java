@@ -1,12 +1,16 @@
 package com.hecatesmoon.testingmockmvcexercise.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.HttpStatus;
@@ -63,6 +67,27 @@ public class ProductControllerTest {
                                 .andExpect(jsonPath("$.response.price").value("3.0"))
                                 .andExpect(jsonPath("$.response.stock").value("70"))
                                 .andExpect(jsonPath("$.response.id").value("1"));
+    }
+
+    @ParameterizedTest
+    @CsvSource({" ,1.0,20",
+                "pear,0.0,20",
+                "watermelon,-4.0,22",
+                "orange,5.0,-12"
+    })
+    public void postProduct_ValidationNotPassing(String name, double price, long stock) throws Exception{
+        ProductRequestDTO product = new ProductRequestDTO();
+        product.setName(name);
+        product.setPrice(price);
+        product.setStock(stock);
+        RequestBuilder request = post("/api/products")
+                                     .contentType(MediaType.APPLICATION_JSON)
+                                     .content(objectMapper.writeValueAsString(product));
+                
+        mockMvc.perform(request)
+                .andExpect(status().isBadRequest());
+
+        verify(productService, never()).createProduct(any(ProductRequestDTO.class));
     }
 
     @Test
