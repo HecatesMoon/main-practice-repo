@@ -76,7 +76,7 @@ public class ProductController {
     private ResponseEntity<Map<String,Object>> buildResponse(Object object, HttpStatusCode status){
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("time", LocalDateTime.now());
-        response.put("status", HttpStatus.OK.value());
+        response.put("status", status.value());
         response.put("response", object);
         return new ResponseEntity<Map<String,Object>>(response, status);
     }
