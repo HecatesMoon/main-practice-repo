@@ -12,8 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.hecatesmoon.testingmockmvcexercise.dto.ProductResponseDTO;
 import com.hecatesmoon.testingmockmvcexercise.service.ProductService;
@@ -43,16 +44,16 @@ public class ProductControllerTest {
 
         when(productService.getProductById(1L)).thenReturn(product);
 
-        RequestBuilder request = MockMvcRequestBuilders.get("/api/products/1");
+        RequestBuilder request = get("/api/products/1");
 
         mockMvc.perform(request)
-               .andExpect(MockMvcResultMatchers.status().isOk())
-               .andExpect(MockMvcResultMatchers.jsonPath("$.time").value(Matchers.containsString(LocalDate.now().toString())))
-               .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(HttpStatus.OK.value()))
-               .andExpect(MockMvcResultMatchers.jsonPath("$.response.id").value(1L))
-               .andExpect(MockMvcResultMatchers.jsonPath("$.response.name").value("juice"))
-               .andExpect(MockMvcResultMatchers.jsonPath("$.response.price").value(2.0))
-               .andExpect(MockMvcResultMatchers.jsonPath("$.response.stock").value(120L));
-    } //Import static
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.time").value(Matchers.containsString(LocalDate.now().toString())))
+               .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()))
+               .andExpect(jsonPath("$.response.id").value(1L))
+               .andExpect(jsonPath("$.response.name").value("juice"))
+               .andExpect(jsonPath("$.response.price").value(2.0))
+               .andExpect(jsonPath("$.response.stock").value(120L));
+    } 
 
 }
