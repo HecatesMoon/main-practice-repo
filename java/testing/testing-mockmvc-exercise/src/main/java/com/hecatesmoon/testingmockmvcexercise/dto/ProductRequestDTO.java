@@ -14,10 +14,6 @@ public class ProductRequestDTO {
 
     public ProductRequestDTO (){}
 
-    public static Object toObject(ProductRequestDTO request){
-        return new Object();
-    }
-
     public String getName() {
         return name;
     }

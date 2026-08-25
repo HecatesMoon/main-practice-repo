@@ -8,10 +8,6 @@ public class ProductResponseDTO {
 
     public ProductResponseDTO(){}
 
-    public static ProductResponseDTO from(Object product){
-        return new ProductResponseDTO();
-    }
-
     public long getId() {
         return id;
     }
