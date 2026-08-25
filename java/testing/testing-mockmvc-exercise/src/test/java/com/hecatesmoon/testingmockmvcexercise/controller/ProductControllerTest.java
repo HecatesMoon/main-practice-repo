@@ -126,6 +126,7 @@ public class ProductControllerTest {
         RequestBuilder request = get("/api/products/12");
 
         mockMvc.perform(request)
+               .andExpect(status().isNotFound())
                .andExpect(jsonPath("$.time").value(Matchers.containsString(LocalDateTime.now().toString().substring(0, 15))))
                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()))
                .andExpect(jsonPath("$.message").exists());
