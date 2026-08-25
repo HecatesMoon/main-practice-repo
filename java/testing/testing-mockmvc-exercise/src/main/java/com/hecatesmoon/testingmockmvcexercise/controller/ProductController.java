@@ -64,7 +64,7 @@ public class ProductController {
     @DeleteMapping("products/{id}")
     public ResponseEntity<Map<String,Object>> deleteProduct(@PathVariable Long id){
         productService.deleteProduct(id);
-        return buildResponse("product deleted successfully", HttpStatus.NO_CONTENT);
+        return buildResponse("product deleted successfully", HttpStatus.OK);
     }
 
     @PutMapping("products/{id}")
