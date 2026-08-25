@@ -1,11 +1,13 @@
 package com.hecatesmoon.testingmockmvcexercise.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -25,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.hecatesmoon.testingmockmvcexercise.dto.ProductRequestDTO;
 import com.hecatesmoon.testingmockmvcexercise.dto.ProductResponseDTO;
+import com.hecatesmoon.testingmockmvcexercise.exception.ProductNotFoundException;
 import com.hecatesmoon.testingmockmvcexercise.service.ProductService;
 
 import tools.jackson.databind.ObjectMapper;
@@ -43,7 +46,7 @@ public class ProductControllerTest {
     }
 
     @Test
-    public void postProduct() throws Exception{
+    public void postProduct_ValidProduct() throws Exception{
         ProductRequestDTO product = new ProductRequestDTO();
         product.setName("milk");
         product.setPrice(3.0);
@@ -91,7 +94,7 @@ public class ProductControllerTest {
     }
 
     @Test
-    public void getProduct() throws Exception{
+    public void getProduct_ValidId() throws Exception{
         ProductResponseDTO product = new ProductResponseDTO();
         product.setId(1L);
         product.setName("juice");
@@ -111,5 +114,17 @@ public class ProductControllerTest {
                .andExpect(jsonPath("$.response.price").value(2.0))
                .andExpect(jsonPath("$.response.stock").value(120L));
     } 
+
+    @Test
+    public void getProduct_InvalidId() throws Exception{
+        when(productService.getProductById(anyLong())).thenThrow(new ProductNotFoundException("Product not Found"));
+
+        RequestBuilder request = get("/api/products/12");
+
+        mockMvc.perform(request)
+               .andExpect(jsonPath("$.time").value(Matchers.containsString(LocalDateTime.now().toString().substring(0, 15))))
+               .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()))
+               .andExpect(jsonPath("$.message").exists());
+    }
 
 }
