@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -125,6 +126,86 @@ public class ProductControllerTest {
                .andExpect(jsonPath("$.time").value(Matchers.containsString(LocalDateTime.now().toString().substring(0, 15))))
                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()))
                .andExpect(jsonPath("$.message").exists());
+    }
+
+    @Test
+    public void listAllProducts_withValidParam() throws Exception{
+        ProductResponseDTO product1 = new ProductResponseDTO();
+        product1.setId(1L);
+        product1.setName("milk");
+        product1.setPrice(3.0);
+        product1.setStock(40L);
+        ProductResponseDTO product2 = new ProductResponseDTO();
+        product2.setId(2L);
+        product2.setName("eggs");
+        product2.setPrice(0.6);
+        product2.setStock(90L);
+        ProductResponseDTO product3 = new ProductResponseDTO();
+        product3.setId(3L);
+        product3.setName("cheese");
+        product3.setPrice(2.0);
+        product3.setStock(80L);
+
+        when(productService.listProducts(1.0)).thenReturn(List.of(product1,product3));
+
+        RequestBuilder request = get("/api/products").param("minPrice","1");
+
+        mockMvc.perform(request)
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.time").value(Matchers.containsString(LocalDateTime.now().toString().substring(0,15))))
+               .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()))
+               .andExpect(jsonPath("$.response", Matchers.hasSize(2)))
+               .andExpect(jsonPath("$.response[0].id").value("1"))
+               .andExpect(jsonPath("$.response[0].name").value("milk"))
+               .andExpect(jsonPath("$.response[0].price").value("3.0"))
+               .andExpect(jsonPath("$.response[0].stock").value("40"))
+               .andExpect(jsonPath("$.response[1].id").value("3"))
+               .andExpect(jsonPath("$.response[1].name").value("cheese"))
+               .andExpect(jsonPath("$.response[1].price").value("2.0"))
+               .andExpect(jsonPath("$.response[1].stock").value("80"));
+
+        verify(productService, never()).listProducts(0.0); //this part only makes sense because in this test we do not use 0.0 as minPrice
+    }
+    
+    @Test
+    public void listAllProducts_withEmptyParam() throws Exception{
+        ProductResponseDTO product1 = new ProductResponseDTO();
+        product1.setId(1L);
+        product1.setName("milk");
+        product1.setPrice(3.0);
+        product1.setStock(40L);
+        ProductResponseDTO product2 = new ProductResponseDTO();
+        product2.setId(2L);
+        product2.setName("eggs");
+        product2.setPrice(0.6);
+        product2.setStock(90L);
+        ProductResponseDTO product3 = new ProductResponseDTO();
+        product3.setId(3L);
+        product3.setName("cheese");
+        product3.setPrice(2.0);
+        product3.setStock(80L);
+
+        when(productService.listProducts(any())).thenReturn(List.of(product1,product2,product3));
+
+        RequestBuilder request = get("/api/products");
+
+        mockMvc.perform(request)
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.time").value(Matchers.containsString(LocalDateTime.now().toString().substring(0,15))))
+               .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()))
+               .andExpect(jsonPath("$.response", Matchers.hasSize(3)))
+               .andExpect(jsonPath("$.response[0].id").value("1"))
+               .andExpect(jsonPath("$.response[0].name").value("milk"))
+               .andExpect(jsonPath("$.response[0].price").value("3.0"))
+               .andExpect(jsonPath("$.response[0].stock").value("40"))
+               .andExpect(jsonPath("$.response[1].id").value("2"))
+               .andExpect(jsonPath("$.response[1].name").value("eggs"))
+               .andExpect(jsonPath("$.response[1].price").value("0.6"))
+               .andExpect(jsonPath("$.response[1].stock").value("90"))
+               .andExpect(jsonPath("$.response[2].id").value("3"))
+               .andExpect(jsonPath("$.response[2].name").value("cheese"))
+               .andExpect(jsonPath("$.response[2].price").value("2.0"))
+               .andExpect(jsonPath("$.response[2].stock").value("80"));
     }
 
 }
