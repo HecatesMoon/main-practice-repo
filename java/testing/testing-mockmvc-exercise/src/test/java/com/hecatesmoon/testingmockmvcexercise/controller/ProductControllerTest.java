@@ -3,6 +3,7 @@ package com.hecatesmoon.testingmockmvcexercise.controller;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -21,6 +22,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -206,6 +209,19 @@ public class ProductControllerTest {
                .andExpect(jsonPath("$.response[2].name").value("cheese"))
                .andExpect(jsonPath("$.response[2].price").value("2.0"))
                .andExpect(jsonPath("$.response[2].stock").value("80"));
+    }
+
+    @Test
+    public void deleteProduct_ValidId() throws Exception{
+        RequestBuilder request = delete("/api/products/1");
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.time").value(Matchers.containsString(LocalDateTime.now().toString().substring(0, 15))))
+                .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()))
+                .andExpect(jsonPath("$.response").exists());
+
+        verify(productService, times(1)).deleteProduct(1L);
     }
 
 }
