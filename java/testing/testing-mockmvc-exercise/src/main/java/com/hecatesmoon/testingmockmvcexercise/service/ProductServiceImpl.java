@@ -81,7 +81,9 @@ public class ProductServiceImpl implements ProductService {
         newProduct.setPrice(dto.getPrice());
         newProduct.setStock(dto.getStock());
         
-        return products.put(id, newProduct);
+        products.put(id, newProduct); //this returns previous value
+        
+        return products.get(id); 
     }
 
     public ProductResponseDTO getProductById(Long id){
