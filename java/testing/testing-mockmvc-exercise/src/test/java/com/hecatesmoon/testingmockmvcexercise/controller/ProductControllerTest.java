@@ -2,6 +2,7 @@ package com.hecatesmoon.testingmockmvcexercise.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -26,6 +27,7 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -223,6 +225,33 @@ public class ProductControllerTest {
                 .andExpect(jsonPath("$.response").exists());
 
         verify(productService, times(1)).deleteProduct(1L);
+    }
+
+    @Test
+    public void editProduct_validId() throws Exception{
+        ProductRequestDTO product = new ProductRequestDTO();
+        product.setName("bread");
+        product.setPrice(2.0);
+        product.setStock(20L);
+
+        ProductResponseDTO productResponse = new ProductResponseDTO();
+        productResponse.setId(1L);
+        productResponse.setName("baguette");
+        productResponse.setPrice(1.7);
+        productResponse.setStock(12L);
+
+        when(productService.editProduct(eq(1L), any(ProductRequestDTO.class))).thenReturn(productResponse);
+
+        RequestBuilder request = put("/api/products/1").contentType(MediaType.APPLICATION_JSON)
+                                                                   .content(objectMapper.writeValueAsString(product));
+
+        mockMvc.perform(request).andExpect(status().isOk())
+                                .andExpect(jsonPath("$.time").value(Matchers.containsString(LocalDateTime.now().toString().substring(0, 15))))
+                                .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()))
+                                .andExpect(jsonPath("$.response.id").value("1"))                                                
+                                .andExpect(jsonPath("$.response.name").value("baguette"))                                                
+                                .andExpect(jsonPath("$.response.price").value("1.7"))                                                
+                                .andExpect(jsonPath("$.response.stock").value("12"));                                                
     }
 
 }
