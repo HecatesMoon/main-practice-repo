@@ -12,6 +12,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.apache.catalina.connector.Request;
+import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -252,6 +254,23 @@ public class ProductControllerTest {
                                 .andExpect(jsonPath("$.response.name").value("baguette"))                                                
                                 .andExpect(jsonPath("$.response.price").value("1.7"))                                                
                                 .andExpect(jsonPath("$.response.stock").value("12"));                                                
+    }
+
+    @Test
+    public void editProduct_InvalidId() throws Exception{
+        ProductRequestDTO product = new ProductRequestDTO(); 
+        product.setName("test");
+        product.setPrice(1.0);
+        product.setStock(0L);
+        when(productService.editProduct(eq(12L), any(ProductRequestDTO.class))).thenThrow(new ProductNotFoundException("this product does not exist"));
+
+        RequestBuilder request = put("/api/products/12").contentType(MediaType.APPLICATION_JSON)
+                                                                     .content(objectMapper.writeValueAsString(product));
+                                                                     
+        mockMvc.perform(request).andExpect(status().isNotFound())
+                                .andExpect(jsonPath("$.time").value(Matchers.containsString(LocalDateTime.now().toString().substring(0,15))))
+                                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()))
+                                .andExpect(jsonPath("$.message").value("this product does not exist"));
     }
 
 }
