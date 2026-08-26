@@ -69,8 +69,8 @@ public class ProductController {
 
     @PutMapping("products/{id}")
     public ResponseEntity<Map<String, Object>> putMethodName(@PathVariable Long id, @Valid @RequestBody  ProductRequestDTO product) {
-        productService.editProduct(id, product);        
-        return buildResponse(product, HttpStatus.OK);
+        ProductResponseDTO response = productService.editProduct(id, product);        
+        return buildResponse(response, HttpStatus.OK);
     }
 
     private ResponseEntity<Map<String,Object>> buildResponse(Object object, HttpStatusCode status){
