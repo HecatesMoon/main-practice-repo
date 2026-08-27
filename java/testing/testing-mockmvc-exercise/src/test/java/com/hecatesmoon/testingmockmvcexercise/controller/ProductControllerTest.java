@@ -1,6 +1,7 @@
 package com.hecatesmoon.testingmockmvcexercise.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
@@ -170,6 +171,7 @@ public class ProductControllerTest {
                .andExpect(jsonPath("$.response[1].price").value("2.0"))
                .andExpect(jsonPath("$.response[1].stock").value("80"));
 
+        verify(productService, times(1)).listProducts(anyDouble());
         verify(productService, never()).listProducts(0.0); //this part only makes sense because in this test we do not use 0.0 as minPrice
     }
     
@@ -191,7 +193,7 @@ public class ProductControllerTest {
         product3.setPrice(2.0);
         product3.setStock(80L);
 
-        when(productService.listProducts(any())).thenReturn(List.of(product1,product2,product3));
+        when(productService.listProducts(0.0)).thenReturn(List.of(product1,product2,product3));
 
         RequestBuilder request = get("/api/products");
 
@@ -212,6 +214,9 @@ public class ProductControllerTest {
                .andExpect(jsonPath("$.response[2].name").value("cheese"))
                .andExpect(jsonPath("$.response[2].price").value("2.0"))
                .andExpect(jsonPath("$.response[2].stock").value("80"));
+
+        verify(productService, times(1)).listProducts(anyDouble());
+
     }
 
     @Test
