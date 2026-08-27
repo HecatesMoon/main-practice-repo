@@ -220,6 +220,17 @@ public class ProductControllerTest {
     }
 
     @Test
+    public void listAllProducts_EmptyListNoParams() throws Exception{
+        RequestBuilder request = get("/api/products");
+
+        mockMvc.perform(request).andExpect(status().isOk())
+                                .andExpect(jsonPath("$.time").value(Matchers.containsString(LocalDateTime.now().toString().substring(0,15))))
+                                .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()))
+                                .andExpect(jsonPath("$.response").isEmpty());
+
+    }
+
+    @Test
     public void deleteProduct_ValidId() throws Exception{
         RequestBuilder request = delete("/api/products/1");
 
