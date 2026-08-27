@@ -131,7 +131,7 @@ public class ProductControllerTest {
                .andExpect(status().isNotFound())
                .andExpect(jsonPath("$.time").value(Matchers.containsString(LocalDateTime.now().toString().substring(0, 15))))
                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()))
-               .andExpect(jsonPath("$.message").exists());
+               .andExpect(jsonPath("$.message").value("Product not Found"));
     }
 
     @Test
