@@ -303,4 +303,23 @@ public class ProductControllerTest {
                                 .andExpect(jsonPath("$.message").value("this product does not exist"));
     }
 
+    @ParameterizedTest
+    @CsvSource({" ,1.0,20",
+                "pear,0.0,20",
+                "watermelon,-4.0,22",
+                "orange,5.0,-12"})
+    public void editProduct_InvalidBody(String name, Double price, Long stock) throws Exception{
+        ProductRequestDTO product = new ProductRequestDTO();
+        product.setName(name);
+        product.setPrice(price);
+        product.setStock(stock);
+
+        RequestBuilder request = put("/api/products/1").contentType(MediaType.APPLICATION_JSON)
+                                                                    .content(objectMapper.writeValueAsString(product));
+
+        mockMvc.perform(request).andExpect(status().isBadRequest());
+
+        verify(productService, never()).editProduct(anyLong(), any(ProductRequestDTO.class));
+    }
+
 }
