@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -242,6 +243,20 @@ public class ProductControllerTest {
                 .andExpect(jsonPath("$.response").value("product deleted successfully"));
 
         verify(productService, times(1)).deleteProduct(1L);
+    }
+
+    @Test
+    public void deleteProduct_InvalidId() throws Exception{
+        RequestBuilder request = delete("/api/products/1");
+
+        doThrow(new ProductNotFoundException("this product does not exist")).when(productService).deleteProduct(1L);
+
+        mockMvc.perform(request).andExpect(status().isNotFound())
+                                .andExpect(jsonPath("$.time").value(Matchers.containsString(LocalDateTime.now().toString().substring(0,15))))
+                                .andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.value()))
+                                .andExpect(jsonPath("$.message").value("this product does not exist"));
+
+        verify(productService, times(1)).deleteProduct(anyLong());
     }
 
     @Test
