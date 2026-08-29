@@ -10,7 +10,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -72,7 +71,7 @@ public class ProductControllerTest {
                                      .content(objectMapper.writeValueAsString(product));
 
         mockMvc.perform(request).andExpect(status().isCreated())
-                                .andExpect(jsonPath("$.time").value(Matchers.containsString(LocalDate.now().toString())))
+                                .andExpect(jsonPath("$.time").value(Matchers.containsString(LocalDateTime.now().toString().substring(0,15))))
                                 .andExpect(jsonPath("$.status").value(HttpStatus.CREATED.value()))
                                 .andExpect(jsonPath("$.response.name").value("milk"))
                                 .andExpect(jsonPath("$.response.price").value(3.0))
@@ -115,7 +114,7 @@ public class ProductControllerTest {
 
         mockMvc.perform(request)
                .andExpect(status().isOk())
-               .andExpect(jsonPath("$.time").value(Matchers.containsString(LocalDate.now().toString())))
+               .andExpect(jsonPath("$.time").value(Matchers.containsString(LocalDateTime.now().toString().substring(0,15))))
                .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()))
                .andExpect(jsonPath("$.response.id").value(1L))
                .andExpect(jsonPath("$.response.name").value("juice"))
