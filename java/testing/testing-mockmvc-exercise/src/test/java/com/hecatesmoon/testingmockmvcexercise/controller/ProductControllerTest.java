@@ -75,9 +75,9 @@ public class ProductControllerTest {
                                 .andExpect(jsonPath("$.time").value(Matchers.containsString(LocalDate.now().toString())))
                                 .andExpect(jsonPath("$.status").value(HttpStatus.CREATED.value()))
                                 .andExpect(jsonPath("$.response.name").value("milk"))
-                                .andExpect(jsonPath("$.response.price").value("3.0"))
-                                .andExpect(jsonPath("$.response.stock").value("70"))
-                                .andExpect(jsonPath("$.response.id").value("1"));
+                                .andExpect(jsonPath("$.response.price").value(3.0))
+                                .andExpect(jsonPath("$.response.stock").value(70L))
+                                .andExpect(jsonPath("$.response.id").value(1L));
     }
 
     @ParameterizedTest
@@ -163,14 +163,14 @@ public class ProductControllerTest {
                .andExpect(jsonPath("$.time").value(Matchers.containsString(LocalDateTime.now().toString().substring(0,15))))
                .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()))
                .andExpect(jsonPath("$.response", Matchers.hasSize(2)))
-               .andExpect(jsonPath("$.response[0].id").value("1"))
+               .andExpect(jsonPath("$.response[0].id").value(1L))
                .andExpect(jsonPath("$.response[0].name").value("milk"))
-               .andExpect(jsonPath("$.response[0].price").value("3.0"))
-               .andExpect(jsonPath("$.response[0].stock").value("40"))
-               .andExpect(jsonPath("$.response[1].id").value("3"))
+               .andExpect(jsonPath("$.response[0].price").value(3.0))
+               .andExpect(jsonPath("$.response[0].stock").value(40L))
+               .andExpect(jsonPath("$.response[1].id").value(3L))
                .andExpect(jsonPath("$.response[1].name").value("cheese"))
-               .andExpect(jsonPath("$.response[1].price").value("2.0"))
-               .andExpect(jsonPath("$.response[1].stock").value("80"));
+               .andExpect(jsonPath("$.response[1].price").value(2.0))
+               .andExpect(jsonPath("$.response[1].stock").value(80L));
 
         verify(productService, times(1)).listProducts(anyDouble());
         verify(productService, never()).listProducts(0.0); //this part only makes sense because in this test we do not use 0.0 as minPrice
@@ -203,18 +203,18 @@ public class ProductControllerTest {
                .andExpect(jsonPath("$.time").value(Matchers.containsString(LocalDateTime.now().toString().substring(0,15))))
                .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()))
                .andExpect(jsonPath("$.response", Matchers.hasSize(3)))
-               .andExpect(jsonPath("$.response[0].id").value("1"))
+               .andExpect(jsonPath("$.response[0].id").value(1L))
                .andExpect(jsonPath("$.response[0].name").value("milk"))
-               .andExpect(jsonPath("$.response[0].price").value("3.0"))
-               .andExpect(jsonPath("$.response[0].stock").value("40"))
-               .andExpect(jsonPath("$.response[1].id").value("2"))
+               .andExpect(jsonPath("$.response[0].price").value(3.0))
+               .andExpect(jsonPath("$.response[0].stock").value(40L))
+               .andExpect(jsonPath("$.response[1].id").value(2L))
                .andExpect(jsonPath("$.response[1].name").value("eggs"))
-               .andExpect(jsonPath("$.response[1].price").value("0.6"))
-               .andExpect(jsonPath("$.response[1].stock").value("90"))
-               .andExpect(jsonPath("$.response[2].id").value("3"))
+               .andExpect(jsonPath("$.response[1].price").value(0.6))
+               .andExpect(jsonPath("$.response[1].stock").value(90L))
+               .andExpect(jsonPath("$.response[2].id").value(3L))
                .andExpect(jsonPath("$.response[2].name").value("cheese"))
-               .andExpect(jsonPath("$.response[2].price").value("2.0"))
-               .andExpect(jsonPath("$.response[2].stock").value("80"));
+               .andExpect(jsonPath("$.response[2].price").value(2.0))
+               .andExpect(jsonPath("$.response[2].stock").value(80L));
 
         verify(productService, times(1)).listProducts(anyDouble());
 
@@ -279,10 +279,10 @@ public class ProductControllerTest {
         mockMvc.perform(request).andExpect(status().isOk())
                                 .andExpect(jsonPath("$.time").value(Matchers.containsString(LocalDateTime.now().toString().substring(0, 15))))
                                 .andExpect(jsonPath("$.status").value(HttpStatus.OK.value()))
-                                .andExpect(jsonPath("$.response.id").value("1"))                                                
+                                .andExpect(jsonPath("$.response.id").value(1L))                                                
                                 .andExpect(jsonPath("$.response.name").value("baguette"))                                                
-                                .andExpect(jsonPath("$.response.price").value("1.7"))                                                
-                                .andExpect(jsonPath("$.response.stock").value("12"));                                                
+                                .andExpect(jsonPath("$.response.price").value(1.7))                                                
+                                .andExpect(jsonPath("$.response.stock").value(12L));                                                
     }
 
     @Test
